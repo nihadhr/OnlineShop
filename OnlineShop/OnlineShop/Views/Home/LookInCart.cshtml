@@ -1,0 +1,49 @@
+﻿@using OnlineShopPodaci.Model;
+@{
+    var cartdetails = (List<CartDetails>)ViewData["cartdetails"];
+    decimal suma = 0;
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LookInCart</title>
+</head>
+<body>
+    <h3 style="color:maroon">Artikli u košarici: </h3>
+    <br />
+    <br />
+
+
+    <table border="1">
+        <tr>
+            <th>Naziv proizvoda</th>
+            <th>Količina</th>
+            <th>Cijena</th>
+            <th>Akcija</th>
+
+        </tr>
+        @foreach (CartDetails cd in cartdetails)
+        {
+            <tr>
+                <td>@cd.Product.ProductName</td>
+                <td>@cd.Quantity</td>
+                <td>@(cd.Quantity * cd.Product.UnitPrice)</td>
+                <td><a href="/Home/RemoveFromCart?ID=@cd.Product.ProductID">Ukloni iz korpe</a></td>
+            </tr>
+
+        }
+
+
+
+    </table>
+
+    <br />
+    <h4>UKUPNO: @suma BAM</h4>
+    <br /><a href="#">Očisti košaricu !</a>
+
+</body>
+</html>

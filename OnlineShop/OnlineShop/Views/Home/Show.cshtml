@@ -1,0 +1,46 @@
+﻿@using OnlineShopPodaci.Model;
+
+@{
+    ViewData["Title"] = "Show";
+
+    List<Product> data = ViewData["key1"] as List<Product>;
+
+}
+
+<h1>Prikaz svih proizvoda</h1>
+
+<table border="1">
+    <tr>
+        <th>Proizvod ID</th>
+        <th>Broj proizvoda</th>
+        <th>Naziv podkategorije</th>
+        <th>Naziv proizvodjaca</th>
+        <th>Naziv proizvoda</th>
+        <th>Slika URL</th>
+        <th>Opis</th>
+        <th>Cijena</th>
+    </tr>
+
+    @foreach (Product i in data)
+    {
+        <tr>
+            <td>@i.ProductID</td>
+            <td>@i.ProductNumber</td>
+            <td>@i.SubCategory.SubCategoryName</td>
+            <td>@i.Manufacturer.ManufacturerName</td>
+            <td>@i.ProductName</td>
+            <td>@i.ImageUrl</td>
+            <td>@i.Description</td>
+            <td>@i.UnitPrice</td>
+            <td>
+                <a href="/Home/Delete?ID=@i.ProductID">Obrisi</a>
+            </td>
+
+        </tr>
+    }
+</table>
+<br />
+
+<form action="/Home/AddProduct">
+    <input type="submit" value="Dodaj novi proizvod" />
+</form>

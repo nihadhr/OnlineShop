@@ -1,0 +1,51 @@
+﻿@using OnlineShopPodaci.Model;
+
+@{
+    //Layout = null;
+
+    var products = (List<Product>)ViewData["kljuc"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Show2</title>
+</head>
+<body>
+    <h2>Pregled proizvoda</h2><br /><br />
+    <table border="1">
+        <tr>
+            <th>Proizvod ID</th>
+            <th>Broj proizvoda</th>
+            <th>Naziv podkategorije</th>
+            <th>Naziv proizvodjaca</th>
+            <th>Naziv proizvoda</th>
+            <th>Slika URL</th>
+            <th>Opis</th>
+            <th>Cijena</th>
+            <th>Kolicina</th>
+            <th>Akcija</th>
+        </tr>
+        @foreach (Product p in products)
+        {
+            <tr>
+                <td>@p.ProductID</td>
+                <td>@p.ProductNumber</td>
+                <td>@p.SubCategory.SubCategoryName</td>
+                <td>@p.Manufacturer.ManufacturerName</td>
+                <td>@p.ProductName</td>
+                <td>@p.ImageUrl</td>
+                <td>@p.Description</td>
+                <td>@p.UnitPrice</td>
+                <td><input type="number" name="q" value="1" /></td>
+                <td><a href="/Home/AddToCart?ID=@p.ProductID&quantity=1">Dodaj u košaricu !</a></td>
+
+            </tr>
+
+        }
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+﻿@using OnlineShopPodaci.Model;
+
+@{
+    ViewData["Title"] = "AddProduct";
+
+    List<SubCategory> data2 = ViewData["key2"] as List<SubCategory>;
+
+    List<Manufacturer> data3 = ViewData["key3"] as List<Manufacturer>;
+}
+
+<h1>Dodaj novi proizvod</h1>
+<br />
+<br />
+
+<form action="/Home/SaveProduct">
+
+    <p>Broj proizvoda</p>
+    <input type="text" name="productNumber" />
+    <br />
+
+    <p>Podkategorija</p>
+    <select name="subCategoryID">
+        <option name="subCategoryID">Odaberite podkategoriju</option>
+
+        @foreach (SubCategory i in data2)
+        {
+            <option name="subCategoryID" value="@i.SubCategoryID">@i.SubCategoryName</option>
+        }
+    </select>
+    <br />
+
+    <p>Proizvodjac</p>
+    <select name="manufacturerID">
+        <option name="manufacturerID">Odaberite proizvodjaca</option>
+
+        @foreach (Manufacturer i in data3)
+        {
+            <option name="manufacturerID" value="@i.ManufacturerID">@i.ManufacturerName</option>
+        }
+    </select>
+    <br />
+    <a href="/Home/AddManufacturer">Želite dodati novog proizvodjaca?</a>
+    <br />
+    <p>Naziv proizvoda</p>
+    <input type="text" name="productName" />
+    <br />
+
+    <p>URL slike</p>
+    <input type="url" name="imageURL" />
+    <br />
+
+    <p>Opis</p>
+    <input type="text" style="width:200px; height:150px;" name="description" />
+    <br />
+
+    <p>Cijena</p>
+    <input type="text" name="unitPrice" />
+    <br /><br />
+
+    <input type="submit" value="POTVRDI" />
+</form>
+
+
+

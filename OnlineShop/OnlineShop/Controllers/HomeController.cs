@@ -190,6 +190,19 @@ namespace OnlineShop.Controllers
             novi.Dispose(); 
             return View();
         }
+        public IActionResult DeleteCart()  //naknadno ce se primati userid da se brise korpa iskljucivo tog korisnika, kao i za sve prethodne funkcionalnosti koje ce biti vezane i za userid
+        {
+            OnlineShopContext novi = new OnlineShopContext();
+            List<Cart> lista = novi.cart.ToList();
+            var ID=lista.Last().CartID;  //pomocu .Find uz UserID ce se naci zapis poslije kad bude vezana korpa za userid
+            //List<CartDetails> cartdetails = novi.cartdetails.Include(p=>p.Product).Include(c=>c.Cart).ToList();
+            novi.cartdetails.Include(p => p.Product).Include(c => c.Cart).ToList().RemoveAll(c => c.CartID == ID); //obrisani svi zapisi iz CartDetails vezani za tu Korpu
+            novi.SaveChanges();  
+            novi.cart.Remove(lista.SingleOrDefault(c => c.CartID == ID));
+            novi.SaveChanges();
+            novi.Dispose();
+            return View();
+        }
 
     }
 }

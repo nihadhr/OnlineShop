@@ -180,6 +180,10 @@ namespace OnlineShop.Controllers
             ViewData["cartdetails"] = novi.cartdetails.Include(s => s.Product).Include(a => a.Cart).ToList();
             return View();
         }
+        public IActionResult RemoveFromCart(){
+        
+        return View();
+        }
 
     }
 }

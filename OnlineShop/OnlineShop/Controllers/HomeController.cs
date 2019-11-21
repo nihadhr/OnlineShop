@@ -180,9 +180,15 @@ namespace OnlineShop.Controllers
             ViewData["cartdetails"] = novi.cartdetails.Include(s => s.Product).Include(a => a.Cart).ToList();
             return View();
         }
-        public IActionResult RemoveFromCart(){
-        
-        return View();
+        public IActionResult RemoveFromCart(int productid,int cartid){
+
+            OnlineShopContext novi = new OnlineShopContext();
+            novi.cartdetails.Remove(novi.cartdetails.Find(cartid, productid));
+            novi.SaveChanges();  //nakon sto se obrise zapis gdje je productID i cartID odgovarajuci, ide snimanje izmjena 
+
+            CalculateTotalPrice(cartid);//rekalkulacija cijene u košarici.
+            novi.Dispose(); 
+            return View();
         }
 
     }

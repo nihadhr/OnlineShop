@@ -22,7 +22,8 @@
         <tr>
             <th>Naziv proizvoda</th>
             <th>Količina</th>
-            <th>Cijena</th>
+            <th>Cijena po komadu</th>
+            <th>Ukupno</th>
             <th>Akcija</th>
 
         </tr>
@@ -31,8 +32,9 @@
             <tr>
                 <td>@cd.Product.ProductName</td>
                 <td>@cd.Quantity</td>
+                <td>@cd.Product.UnitPrice</td>
                 <td>@(cd.Quantity * cd.Product.UnitPrice)</td>
-                <td><a href="/Home/RemoveFromCart?ID=@cd.Product.ProductID">Ukloni iz korpe</a></td>
+                <td><a href="/Home/RemoveFromCart?productid=@cd.ProductID&cartid=@cd.CartID">Ukloni iz korpe</a></td>
             </tr>
 
         }

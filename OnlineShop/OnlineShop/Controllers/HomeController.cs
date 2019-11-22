@@ -31,7 +31,8 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 0,
+            Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
@@ -122,9 +123,8 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        public IActionResult AddToCart(int ID, int quantity)
+        public IActionResult AddToCart(int ID, int qID)
         {
-
             OnlineShopContext novi = new OnlineShopContext();
             List<Cart> cart = novi.cart.ToList();  //uzimam sve korpe, radi provjere da li već postoji neka i da li da pravim novu ili dodajem na postojeću CartID
             if (cart.Count() == 0)
@@ -135,18 +135,17 @@ namespace OnlineShop.Controllers
             }
 
             int IDCart = novi.cart.ToList().Last().CartID;
-            // uzimamo ID od korpe, aktivne ili novonastale svejedno jer vraća last zapis
 
             if (novi.cartdetails.Find(IDCart, ID) != null)
             {
-                novi.cartdetails.Find(IDCart, ID).Quantity += quantity;  //ako već postoji samo povećaj količinu za datu
+                novi.cartdetails.Find(IDCart, ID).Quantity += qID;  //ako već postoji samo povećaj količinu za datu
             }
             else
             {
                 CartDetails newCartDetail = new CartDetails();
                 newCartDetail.CartID = IDCart;
                 newCartDetail.ProductID = ID;
-                newCartDetail.Quantity = quantity;
+                newCartDetail.Quantity = qID;
                 novi.Add(newCartDetail);
 
             }
@@ -167,7 +166,7 @@ namespace OnlineShop.Controllers
             foreach (CartDetails cd in lista)
             {
                 if (cd.CartID == cartid)
-                    sum += cd.Quantity * (novi.product.Find(cd.ProductID).UnitPrice);
+                    sum += cd.Quantity * cd.Product.UnitPrice;
             }
             SetTotalPrice.TotalPrice = sum;
 
@@ -177,7 +176,13 @@ namespace OnlineShop.Controllers
         public IActionResult LookInCart()
         {
             OnlineShopContext novi = new OnlineShopContext();
-            ViewData["cartdetails"] = novi.cartdetails.Include(s => s.Product).Include(a => a.Cart).ToList();
+            var cd = novi.cartdetails.Include(cd => cd.Product).Include(cd => cd.Cart).ToList();
+            decimal sum = 0;
+            foreach(CartDetails CD in cd)
+                sum += CD.Product.UnitPrice * CD.Quantity;
+
+            ViewData["suma"] = sum;
+            ViewData["cartdetails"] = cd;
             return View();
         }
         public IActionResult RemoveFromCart(int productid,int cartid){

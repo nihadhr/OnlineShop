@@ -39,8 +39,8 @@
                 <td>@p.ImageUrl</td>
                 <td>@p.Description</td>
                 <td>@p.UnitPrice</td>
-                <td><input type="number" name="q" value="1" /></td>
-                <td><a href="/Home/AddToCart?ID=@p.ProductID&quantity=1">Dodaj u košaricu !</a></td>
+                <td><input type="number" runat="server" id="q" value="5" /></td>
+                <td><a asp-controller="Home"asp-action="AddToCart"asp-route-ID="@p.ProductID"asp-route-qID=q>Dodaj u košaricu !</a></td>
 
             </tr>
 

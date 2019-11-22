@@ -1,7 +1,7 @@
 ﻿@using OnlineShopPodaci.Model;
 @{
     var cartdetails = (List<CartDetails>)ViewData["cartdetails"];
-    decimal suma = 0;
+    var suma = (decimal)ViewData["suma"];
 
 }
 
@@ -42,7 +42,7 @@
 
 
     </table>
-
+ 
     <br />
     <h4>UKUPNO: @suma BAM</h4>
     <br /><a href="/Home/DeleteCart">Očisti košaricu !</a>

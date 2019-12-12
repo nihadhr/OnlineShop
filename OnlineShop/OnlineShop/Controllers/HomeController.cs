@@ -21,6 +21,8 @@ namespace OnlineShop.Controllers
             _logger = logger;
         }
 
+        // ovo je nesto novo
+
         public IActionResult Index()
         {
             return View();

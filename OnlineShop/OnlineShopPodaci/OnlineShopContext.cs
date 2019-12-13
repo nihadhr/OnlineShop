@@ -35,10 +35,11 @@ namespace OnlineShopPodaci
                 .WithMany(c => c._CartDetails)
                 .HasForeignKey(cd => cd.CartID);
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=app.fit.ba,1431;Database=OnlineShopDB;Trusted_Connection=False; MultipleActiveResultSets=true;User=OnlineShopUser;Password=ANA116m125");
-
         }
+
     }
 }

@@ -6,55 +6,67 @@
     List<SubCategory> data2 = ViewData["key2"] as List<SubCategory>;
 
     List<Manufacturer> data3 = ViewData["key3"] as List<Manufacturer>;
+
+    var proizvod = ViewData["data"] as Product;
 }
 
-<h1>Dodaj novi proizvod</h1>
+<h1>Dodaj ili izmjeni proizvod</h1>
 <br />
 <br />
 
 <form action="/Home/SaveProduct">
 
+    <input name="productID" value="@proizvod.ProductID" style="display:none" />            
+
+
     <p>Broj proizvoda</p>
-    <input type="text" name="productNumber" />
+    <input type="text" name="productNumber" value="@proizvod.ProductNumber" />
     <br />
 
     <p>Podkategorija</p>
-    <select name="subCategoryID">
-        <option name="subCategoryID">Odaberite podkategoriju</option>
+        <select name="subCategoryID">
+            <option>Odaberite podkategoriju</option>
 
-        @foreach (SubCategory i in data2)
-        {
-            <option name="subCategoryID" value="@i.SubCategoryID">@i.SubCategoryName</option>
-        }
-    </select>
+            @foreach (SubCategory i in data2)
+            {
+                if(proizvod.SubCategoryID==i.SubCategoryID)
+                {
+                    <option value="@i.SubCategoryID" selected>@i.SubCategoryName</option>
+                }
+            }
+        </select>
     <br />
 
     <p>Proizvodjac</p>
-    <select name="manufacturerID">
-        <option name="manufacturerID">Odaberite proizvodjaca</option>
+        <select name="manufacturerID">
+            <option>Odaberite proizvodjaca</option>
 
-        @foreach (Manufacturer i in data3)
-        {
-            <option name="manufacturerID" value="@i.ManufacturerID">@i.ManufacturerName</option>
-        }
-    </select>
+            @foreach (Manufacturer i in data3)
+            {
+                if(proizvod.ManufacturerID==i.ManufacturerID)
+                {
+                     <option value="@i.ManufacturerID" selected>@i.ManufacturerName</option>
+                }
+            }
+        </select>
     <br />
+
     <a href="/Home/AddManufacturer">Dodaj novog proizvodjaca</a>
     <br />
     <p>Naziv proizvoda</p>
-    <input type="text" name="productName" />
+    <input type="text" name="productName" value="@proizvod.ProductName" />
     <br />
 
     <p>URL slike</p>
-    <input type="url" name="imageURL" />
+    <input type="url" name="imageURL" value="@proizvod.ImageUrl" />
     <br />
 
     <p>Opis</p>
-    <input type="text" style="width:200px; height:150px;" name="description" />
+    <input type="text" style="width:200px; height:150px;" name="description" value="@proizvod.Description" />
     <br />
 
     <p>Cijena</p>
-    <input type="text" name="unitPrice" />
+    <input type="text" name="unitPrice" value="@proizvod.UnitPrice" />
     <br /><br />
 
     <input type="submit" value="POTVRDI" />

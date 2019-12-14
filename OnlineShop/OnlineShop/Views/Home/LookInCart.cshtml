@@ -31,21 +31,20 @@
         {
             <tr>
                 <td>@cd.Product.ProductName</td>
-                <td>@cd.Quantity</td>
+                <td>
+                @cd.Quantity
+                </td>
                 <td>@cd.Product.UnitPrice</td>
                 <td>@(cd.Quantity * cd.Product.UnitPrice)</td>
                 <td><a href="/Home/RemoveFromCart?productid=@cd.ProductID&cartid=@cd.CartID">Ukloni iz korpe</a></td>
             </tr>
-
         }
-
-
-
     </table>
 
     <br />
     <h4>UKUPNO: @suma BAM</h4>
-    <br /><a href="/Home/DeleteCart">Očisti košaricu !</a>
+    <br /><a href="/Home/DeleteCart">Očisti košaricu </a>
 
+    <br /><a href="/Home/Show2">Nazad u kupovinu</a>
 </body>
 </html>

@@ -229,5 +229,44 @@ namespace OnlineShop.Controllers
             return View();
         }
 
+
+
+        // LOGIN 
+
+        public IActionResult SignInForm()
+        {
+            OnlineShopContext _database = new OnlineShopContext();
+            ViewData["citykey"] = _database.city.ToList();
+
+
+            return View("SignInForm");
+        }
+
+        public IActionResult SaveLogin(string name,string surname,DateTime birthdate,int cityID,string adresa,string email,string password,int genderID)
+        {
+            OnlineShopContext _database = new OnlineShopContext();
+
+            User user = new User
+            {
+                Name = name,
+                Surname = surname,
+                BirthDate = birthdate,
+                CityID = cityID,
+                Adress = adresa,
+                Email = email,
+                Password = password,
+                GenderID = genderID,
+                //CreditCardID=                     // ne znam kako smo skontali za ovo nek stoji sad za sad
+            };
+
+            // ne moze radit jer je credit card obavezno za unijet tako da ne pokusavaj unijet novog kupca
+
+            _database.user.Add(user);
+            _database.SaveChanges();
+            _database.Dispose();
+            return Redirect("Index");           // sad za sad nek ga redirecta na pocetnu 
+        }
+
+
     }
 }

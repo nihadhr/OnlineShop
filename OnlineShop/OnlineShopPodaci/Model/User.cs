@@ -11,9 +11,14 @@ namespace OnlineShopPodaci.Model
         [Key]
         public int UserID { get; set; }
         public string Name { get; set; }
-        public int Surname { get; set; }
+        public string Surname { get; set; }
         public DateTime BirthDate { get; set; }
+        
+        [ForeignKey("City")]
+        public int CityID { get; set; }
         public City City { get; set; }
+
+
         public string Adress { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }

@@ -233,16 +233,19 @@ namespace OnlineShop.Controllers
 
         // LOGIN 
 
-        public IActionResult SignInForm()
+        public IActionResult LogInForm()
+        {
+            return View();
+        }
+        public IActionResult Registration()
         {
             OnlineShopContext _database = new OnlineShopContext();
-            ViewData["citykey"] = _database.city.ToList();
+            ViewData["gradovi"] = _database.city.ToList();
+            ViewData["spol"] = _database.gender.ToList();
 
-
-            return View("SignInForm");
+            return View();
         }
-
-        public IActionResult SaveLogin(string name,string surname,DateTime birthdate,int cityID,string adresa,string email,string password,int genderID)
+        public IActionResult SaveRegistration(string name,string surname,DateTime birthdate,int cityID,string adresa,string email,string password,int genderID)
         {
             OnlineShopContext _database = new OnlineShopContext();
 
@@ -256,17 +259,17 @@ namespace OnlineShop.Controllers
                 Email = email,
                 Password = password,
                 GenderID = genderID,
-                //CreditCardID=                     // ne znam kako smo skontali za ovo nek stoji sad za sad
             };
 
-            // ne moze radit jer je credit card obavezno za unijet tako da ne pokusavaj unijet novog kupca
 
             _database.user.Add(user);
             _database.SaveChanges();
             _database.Dispose();
-            return Redirect("Index");           // sad za sad nek ga redirecta na pocetnu 
+            return Redirect("RegistrationSuccessful");           
         }
-
-
+        public IActionResult RegistrationSuccessful()
+        {
+            return View();
+        }
     }
 }

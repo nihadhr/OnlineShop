@@ -113,7 +113,7 @@ namespace OnlineShopPodaci.Migrations
                     b.Property<int>("CSC")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CardTypeID")
+                    b.Property<int>("CartTypeID")
                         .HasColumnType("int");
 
                     b.Property<int>("CreditCardNumber")
@@ -127,7 +127,7 @@ namespace OnlineShopPodaci.Migrations
 
                     b.HasKey("CreditCardID");
 
-                    b.HasIndex("CardTypeID");
+                    b.HasIndex("CartTypeID");
 
                     b.ToTable("creditcard");
                 });
@@ -168,6 +168,11 @@ namespace OnlineShopPodaci.Migrations
             modelBuilder.Entity("OnlineShopPodaci.Model.Order", b =>
                 {
                     b.Property<int>("OrderID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CartID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("OrderDate")
@@ -179,10 +184,13 @@ namespace OnlineShopPodaci.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("UserID")
+                    b.Property<int>("UserID")
                         .HasColumnType("int");
 
                     b.HasKey("OrderID");
+
+                    b.HasIndex("CartID")
+                        .IsUnique();
 
                     b.HasIndex("UserID");
 
@@ -262,7 +270,7 @@ namespace OnlineShopPodaci.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CityID")
+                    b.Property<int>("CityID")
                         .HasColumnType("int");
 
                     b.Property<int?>("CreditCardID")
@@ -271,7 +279,7 @@ namespace OnlineShopPodaci.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GenderID")
+                    b.Property<int>("GenderID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -283,8 +291,8 @@ namespace OnlineShopPodaci.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Surname")
-                        .HasColumnType("int");
+                    b.Property<string>("Surname")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserID");
 
@@ -316,20 +324,24 @@ namespace OnlineShopPodaci.Migrations
                 {
                     b.HasOne("OnlineShopPodaci.Model.CardType", "CardType")
                         .WithMany()
-                        .HasForeignKey("CardTypeID");
+                        .HasForeignKey("CartTypeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("OnlineShopPodaci.Model.Order", b =>
                 {
                     b.HasOne("OnlineShopPodaci.Model.Cart", "Cart")
                         .WithOne("Order")
-                        .HasForeignKey("OnlineShopPodaci.Model.Order", "OrderID")
+                        .HasForeignKey("OnlineShopPodaci.Model.Order", "CartID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OnlineShopPodaci.Model.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("OnlineShopPodaci.Model.Product", b =>
@@ -360,7 +372,9 @@ namespace OnlineShopPodaci.Migrations
                 {
                     b.HasOne("OnlineShopPodaci.Model.City", "City")
                         .WithMany()
-                        .HasForeignKey("CityID");
+                        .HasForeignKey("CityID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("OnlineShopPodaci.Model.CreditCard", "CreditCard")
                         .WithMany()
@@ -368,7 +382,9 @@ namespace OnlineShopPodaci.Migrations
 
                     b.HasOne("OnlineShopPodaci.Model.Gender", "Gender")
                         .WithMany()
-                        .HasForeignKey("GenderID");
+                        .HasForeignKey("GenderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

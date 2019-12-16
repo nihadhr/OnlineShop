@@ -1,0 +1,21 @@
+﻿@using OnlineShopPodaci.Model;
+@{
+    ViewData["Title"] = "SignInForm";
+
+    var cities = (List<City>)ViewData["citykey"];
+}
+
+<h4>Prijavite se da biste mogli obaviti kupovinu</h4>
+
+<label>Email:</label>
+<input type="email" />
+<br />
+<label>Password:</label>
+<input type="password" />
+<br />
+
+<p>Nemate kreiran racun, <a href="/Home/Registration">registrujte ga</a>!</p>
+
+
+
+

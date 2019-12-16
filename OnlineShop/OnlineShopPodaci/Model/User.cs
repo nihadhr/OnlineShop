@@ -29,7 +29,7 @@ namespace OnlineShopPodaci.Model
         public Gender Gender { get; set; }
 
         [ForeignKey("CreditCard")]
-        public int CreditCardID { get; set; }
+        public int? CreditCardID { get; set; }
         public CreditCard CreditCard { get; set; }
     }
 }

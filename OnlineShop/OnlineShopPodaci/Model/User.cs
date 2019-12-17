@@ -30,6 +30,6 @@ namespace OnlineShopPodaci.Model
 
         [ForeignKey("CreditCard")]
         public int? CreditCardID { get; set; }
-        public CreditCard CreditCard { get; set; }
+        public CreditCard? CreditCard { get; set; }
     }
 }

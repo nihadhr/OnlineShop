@@ -24,7 +24,7 @@
         <option>Odaberite grad</option>
         @foreach (City i in gradovi)
         {
-            <option name="cityID" required maxlength="30">@i.CityName</option>
+            <option name="cityID" required maxlength="30" value="@i.CityID">@i.CityName</option>
         }
     </select>
     <br />

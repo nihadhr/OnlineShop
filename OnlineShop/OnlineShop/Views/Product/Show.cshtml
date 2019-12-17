@@ -33,16 +33,16 @@
             <td>@i.Description</td>
             <td>@i.UnitPrice</td>
             <td>
-                <a href="/Home/Delete?ID=@i.ProductID">Obrisi</a>
+                <a href="/Product/Delete?ID=@i.ProductID">Obrisi</a>
             </td>
             <td>
-                <a href="/Home/AddProduct?ProductID=@i.ProductID">Izmjeni</a>
+                <a href="/Product/AddProduct?ProductID=@i.ProductID">Izmjeni</a>
             </td>
         </tr>
     }
 </table>
 <br />
 
-<form action="/Home/AddProduct">
+<form action="/Product/AddProduct">
     <input type="submit" value="Dodaj novi proizvod" />
 </form>

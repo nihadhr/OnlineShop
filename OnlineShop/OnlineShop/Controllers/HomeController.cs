@@ -138,6 +138,15 @@ namespace OnlineShop.Controllers
         {
             return View();
         }
+        public IActionResult CheckLogIn(string UserMail, string UserPass)
+        {
+            OnlineShopContext baza = new OnlineShopContext();
+            var user = baza.user.Where(u => u.Email == UserMail && u.Password == UserPass).FirstOrDefault();
+            if (user == null)
+                return Redirect("LogInForm");
+            else
+                return Redirect("Index");
+        }
         public IActionResult Registration()
         {
             OnlineShopContext _database = new OnlineShopContext();

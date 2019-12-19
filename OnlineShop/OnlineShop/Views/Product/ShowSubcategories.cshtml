@@ -1,51 +1,35 @@
 ﻿@using OnlineShopPodaci.Model;
+
 @{
-    //Layout = null;
+    ViewData["Title"] = "ShowSubcategories";
 
-    //var products = (List<Product>)ViewData["kljuc"];
-
-    var categories = (List<Category>)ViewData["test"];
 }
+@model OnlineShop.ViewModels.ShowSubCategoriesVM;
+
+<h1>@Model.CategoryName</h1>
+<br />
 
 <style>
-
-    #maindiv{
-        width:25%;
-        float:left;
-        margin:10px;
+    #maindiv {
+        width: 20%;
+        float: left;
+        margin: 10px;
     }
 </style>
 
-@foreach (Category i in categories)
+@foreach (var x in Model.Subcategorylist)
 {
         <div id="maindiv" class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100">
                 <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                 <div class="card-body">
                     <h4 class="card-title">
-                        <a href="/Product/ShowSubCategories?ID=@i.CategoryID">@i.CategoryName</a>
+                        <a href="/Product/ShowProducts?ID=@x.SubCategoryID">@x.SubCategoryName</a>
                     </h4>
                 </div>
             </div>
         </div>
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

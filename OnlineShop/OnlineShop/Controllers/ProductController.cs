@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.ViewModels;
 using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
 
@@ -112,8 +113,31 @@ namespace OnlineShop.Controllers
             List<Product> lista = novi.product.Include(s => s.SubCategory).Include(f => f.Manufacturer).ToList();
             ViewData["kljuc"] = lista;
 
+            var categories = novi.category.ToList();
+            ViewData["test"] = categories;
+
             novi.Dispose();
-            return View();
+            return View(categories);
         }
+
+        public IActionResult ShowSubcategories(int ID)
+        {
+            OnlineShopContext _database = new OnlineShopContext();
+
+            ShowSubCategoriesVM lista = new ShowSubCategoriesVM { CategoryName = _database.category.Find(ID).CategoryName, 
+                Subcategorylist = _database.subcategory.Where(s => s.CategoryID == ID).ToList() };
+            return View("ShowSubcategories",lista);
+        }
+
+        public IActionResult ShowProducts(int ID)
+        {
+            OnlineShopContext baza = new OnlineShopContext();
+
+            ShowProductsVM products = new ShowProductsVM { products = baza.product.Where(p => p.SubCategoryID == ID).Include(a=>a.Manufacturer).ToList() };
+
+            return View(products);
+        }
+
+
     }
 }

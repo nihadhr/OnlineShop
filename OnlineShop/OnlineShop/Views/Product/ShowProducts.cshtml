@@ -1,55 +1,33 @@
-﻿@using OnlineShopPodaci.Model;
+﻿
 @{
-    //Layout = null;
-
-    //var products = (List<Product>)ViewData["kljuc"];
-
-    var categories = (List<Category>)ViewData["test"];
+    ViewData["Title"] = "ShowProducts";
 }
+@model OnlineShop.ViewModels.ShowProductsVM;
+
+<h1>Prikaz proizvoda podkategorije</h1>
 
 <style>
-
     #maindiv{
         width:25%;
         float:left;
         margin:10px;
+        height:300px;
     }
 </style>
 
-@foreach (Category i in categories)
+@foreach (var i in Model.products)
 {
         <div id="maindiv" class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100">
                 <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                 <div class="card-body">
                     <h4 class="card-title">
-                        <a href="/Product/ShowSubCategories?ID=@i.CategoryID">@i.CategoryName</a>
+                        <a href="#">@i.ProductName</a>
                     </h4>
+                    <p class="card-text">@i.UnitPrice</p>
+                    <p class="card-text">@i.Manufacturer.ManufacturerName</p>
+
                 </div>
             </div>
         </div>
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }

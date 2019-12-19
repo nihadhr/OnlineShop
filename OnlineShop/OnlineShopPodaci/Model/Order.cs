@@ -10,15 +10,6 @@ namespace OnlineShopPodaci.Model
     {
         [Key]
         public int OrderID { get; set; }
-        
-        [ForeignKey("Cart")]
-        public int CartID { get; set; }
-        public Cart Cart { get; set; }
-        
-        [ForeignKey("User")]
-        public int UserID { get; set; }
-        public User User { get; set; }
-        
         public DateTime OrderDate { get; set; }
         public DateTime ShipDate { get; set; }
         public decimal TotalPrice { get; set; }

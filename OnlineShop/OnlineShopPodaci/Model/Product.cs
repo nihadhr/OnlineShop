@@ -24,6 +24,7 @@ namespace OnlineShopPodaci.Model
         public string ImageUrl { get; set; }
         public string Description { get; set; }
         public decimal UnitPrice { get; set; }
-        public ICollection<CartDetails> _CartDetails { get; set; }
+        public int UnitsInStock { get; set; }
+        
     }
 }

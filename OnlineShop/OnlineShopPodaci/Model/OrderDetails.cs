@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace OnlineShopPodaci.Model
 {
-    public class CartDetails
+    public class OrderDetails
     {
-        [ForeignKey("Cart")]
-        public int CartID { get; set; }
-        public Cart Cart { get; set; }
-        
-        [ForeignKey("Product")]
+        public int OrderID { get; set; }
+        public Order Order { get; set; } 
+        public int UserID { get; set; }
+        public User User { get; set; }
         public int ProductID { get; set; }
         public Product Product { get; set; }
-        
         public int Quantity { get; set; }
+
+
     }
 }

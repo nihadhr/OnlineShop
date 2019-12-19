@@ -1,6 +1,6 @@
 ﻿@using OnlineShopPodaci.Model;
 @{
-    var cartdetails = (List<CartDetails>)ViewData["cartdetails"];
+    //var cartdetails = (List<CartDetails>)ViewData["cartdetails"];
     var suma = (decimal)ViewData["suma"];
 
 }
@@ -27,7 +27,7 @@
             <th>Akcija</th>
 
         </tr>
-        @foreach (CartDetails cd in cartdetails)
+        @*@foreach (CartDetails cd in cartdetails)
         {
             <tr>
                 <td>@cd.Product.ProductName</td>
@@ -38,7 +38,7 @@
                 <td>@(cd.Quantity * cd.Product.UnitPrice)</td>
                 <td><a href="/Home/RemoveFromCart?productid=@cd.ProductID&cartid=@cd.CartID">Ukloni iz korpe</a></td>
             </tr>
-        }
+        }*@
     </table>
 
     <br />

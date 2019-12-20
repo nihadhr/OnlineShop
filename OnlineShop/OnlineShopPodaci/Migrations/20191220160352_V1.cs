@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OnlineShopPodaci.Migrations
 {
-    public partial class migV1 : Migration
+    public partial class V1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,19 +18,6 @@ namespace OnlineShopPodaci.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_cardtype", x => x.CardTypeID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "cart",
-                columns: table => new
-                {
-                    CartID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TotalPrice = table.Column<decimal>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_cart", x => x.CartID);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,12 +76,27 @@ namespace OnlineShopPodaci.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "order",
+                columns: table => new
+                {
+                    OrderID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderDate = table.Column<DateTime>(nullable: false),
+                    ShipDate = table.Column<DateTime>(nullable: false),
+                    TotalPrice = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_order", x => x.OrderID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "creditcard",
                 columns: table => new
                 {
                     CreditCardID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CardTypeID = table.Column<int>(nullable: true),
+                    CartTypeID = table.Column<int>(nullable: false),
                     CreditCardNumber = table.Column<int>(nullable: false),
                     CSC = table.Column<int>(nullable: false),
                     ExpMonth = table.Column<int>(nullable: false),
@@ -104,11 +106,11 @@ namespace OnlineShopPodaci.Migrations
                 {
                     table.PrimaryKey("PK_creditcard", x => x.CreditCardID);
                     table.ForeignKey(
-                        name: "FK_creditcard_cardtype_CardTypeID",
-                        column: x => x.CardTypeID,
+                        name: "FK_creditcard_cardtype_CartTypeID",
+                        column: x => x.CartTypeID,
                         principalTable: "cardtype",
                         principalColumn: "CardTypeID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,14 +141,14 @@ namespace OnlineShopPodaci.Migrations
                     UserID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
-                    Surname = table.Column<int>(nullable: false),
+                    Surname = table.Column<string>(nullable: true),
                     BirthDate = table.Column<DateTime>(nullable: false),
-                    CityID = table.Column<int>(nullable: true),
+                    CityID = table.Column<int>(nullable: false),
                     Adress = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
-                    GenderID = table.Column<int>(nullable: true),
+                    GenderID = table.Column<int>(nullable: false),
                     CreditCardID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -157,7 +159,7 @@ namespace OnlineShopPodaci.Migrations
                         column: x => x.CityID,
                         principalTable: "city",
                         principalColumn: "CityID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_user_creditcard_CreditCardID",
                         column: x => x.CreditCardID,
@@ -169,7 +171,7 @@ namespace OnlineShopPodaci.Migrations
                         column: x => x.GenderID,
                         principalTable: "gender",
                         principalColumn: "GenderID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,12 +181,13 @@ namespace OnlineShopPodaci.Migrations
                     ProductID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductNumber = table.Column<string>(nullable: true),
-                    SubCategoryID = table.Column<int>(nullable: true),
-                    ManufacturerID = table.Column<int>(nullable: true),
+                    SubCategoryID = table.Column<int>(nullable: false),
+                    ManufacturerID = table.Column<int>(nullable: false),
                     ProductName = table.Column<string>(nullable: true),
                     ImageUrl = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    UnitPrice = table.Column<decimal>(nullable: false)
+                    UnitPrice = table.Column<decimal>(nullable: false),
+                    UnitsInStock = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,80 +197,91 @@ namespace OnlineShopPodaci.Migrations
                         column: x => x.ManufacturerID,
                         principalTable: "manufacturer",
                         principalColumn: "ManufacturerID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_product_subcategory_SubCategoryID",
                         column: x => x.SubCategoryID,
                         principalTable: "subcategory",
                         principalColumn: "SubCategoryID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "order",
+                name: "cart",
                 columns: table => new
                 {
-                    OrderID = table.Column<int>(nullable: false),
-                    UserID = table.Column<int>(nullable: true),
-                    OrderDate = table.Column<DateTime>(nullable: false),
-                    ShipDate = table.Column<DateTime>(nullable: false),
-                    TotalPrice = table.Column<decimal>(nullable: false)
+                    UserID = table.Column<int>(nullable: false),
+                    ProductID = table.Column<int>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    TotalPrice = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_order", x => x.OrderID);
+                    table.PrimaryKey("PK_cart", x => new { x.ProductID, x.UserID });
                     table.ForeignKey(
-                        name: "FK_order_cart_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "cart",
-                        principalColumn: "CartID",
+                        name: "FK_cart_product_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "product",
+                        principalColumn: "ProductID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_order_user_UserID",
+                        name: "FK_cart_user_UserID",
                         column: x => x.UserID,
                         principalTable: "user",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "cartdetails",
+                name: "orderdetails",
                 columns: table => new
                 {
-                    CartID = table.Column<int>(nullable: false),
+                    OrderID = table.Column<int>(nullable: false),
+                    UserID = table.Column<int>(nullable: false),
                     ProductID = table.Column<int>(nullable: false),
                     Quantity = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_cartdetails", x => new { x.CartID, x.ProductID });
+                    table.PrimaryKey("PK_orderdetails", x => new { x.ProductID, x.UserID, x.OrderID });
                     table.ForeignKey(
-                        name: "FK_cartdetails_cart_CartID",
-                        column: x => x.CartID,
-                        principalTable: "cart",
-                        principalColumn: "CartID",
+                        name: "FK_orderdetails_order_OrderID",
+                        column: x => x.OrderID,
+                        principalTable: "order",
+                        principalColumn: "OrderID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_cartdetails_product_ProductID",
+                        name: "FK_orderdetails_product_ProductID",
                         column: x => x.ProductID,
                         principalTable: "product",
                         principalColumn: "ProductID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_orderdetails_user_UserID",
+                        column: x => x.UserID,
+                        principalTable: "user",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_cartdetails_ProductID",
-                table: "cartdetails",
-                column: "ProductID");
+                name: "IX_cart_UserID",
+                table: "cart",
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_creditcard_CardTypeID",
+                name: "IX_creditcard_CartTypeID",
                 table: "creditcard",
-                column: "CardTypeID");
+                column: "CartTypeID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_order_UserID",
-                table: "order",
+                name: "IX_orderdetails_OrderID",
+                table: "orderdetails",
+                column: "OrderID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orderdetails_UserID",
+                table: "orderdetails",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
@@ -304,16 +318,16 @@ namespace OnlineShopPodaci.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "cartdetails");
+                name: "cart");
+
+            migrationBuilder.DropTable(
+                name: "orderdetails");
 
             migrationBuilder.DropTable(
                 name: "order");
 
             migrationBuilder.DropTable(
                 name: "product");
-
-            migrationBuilder.DropTable(
-                name: "cart");
 
             migrationBuilder.DropTable(
                 name: "user");

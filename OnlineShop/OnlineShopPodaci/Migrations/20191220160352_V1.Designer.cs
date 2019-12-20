@@ -10,8 +10,8 @@ using OnlineShopPodaci;
 namespace OnlineShopPodaci.Migrations
 {
     [DbContext(typeof(OnlineShopContext))]
-    [Migration("20191219144633_V3")]
-    partial class V3
+    [Migration("20191220160352_V1")]
+    partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

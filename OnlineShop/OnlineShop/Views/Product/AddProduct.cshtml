@@ -39,14 +39,12 @@
 
     <p>Proizvodjac</p>
     <select name="manufacturerID">
-        <option>Odaberite proizvodjaca</option>
+        @*<option>Odaberite proizvodjaca</option>*@
+        <option value="Izaberi" selected disabled>Izaberi</option>
 
         @foreach (Manufacturer i in data3)
         {
-            if(proizvod.ManufacturerID==i.ManufacturerID)
-            {
-                 <option value="@i.ManufacturerID" selected>@i.ManufacturerName</option>
-            }
+            <option value="@i.ManufacturerID">@i.ManufacturerName</option>
 
         }
     </select>

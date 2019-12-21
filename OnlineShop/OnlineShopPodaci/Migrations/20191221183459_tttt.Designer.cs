@@ -10,8 +10,8 @@ using OnlineShopPodaci;
 namespace OnlineShopPodaci.Migrations
 {
     [DbContext(typeof(OnlineShopContext))]
-    [Migration("20191221165905_dodavanjeklasa")]
-    partial class dodavanjeklasa
+    [Migration("20191221183459_tttt")]
+    partial class tttt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -274,8 +274,8 @@ namespace OnlineShopPodaci.Migrations
                     b.Property<int>("SubCategoryID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("UnitPrice")
+                        .HasColumnType("float");
 
                     b.Property<int>("UnitsInStock")
                         .HasColumnType("int");

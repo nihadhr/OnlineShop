@@ -11,7 +11,7 @@ namespace OnlineShopPodaci.Model
         public int BranchID { get; set; }
 
         public string BranchName { get; set; }
-        
+
         public int CityID { get; set; }
         public City City { get; set; }
 

@@ -20,11 +20,10 @@ namespace OnlineShopPodaci
         public DbSet<Order> order { get; set; }
         public DbSet<Product> product { get; set; }
         public DbSet<SubCategory> subcategory { get; set; }
-
-        public DbSet<Branch> branch { get; set; }
         public DbSet<Stock> stock { get; set; }
         public DbSet<StockProduct> stockproduct { get; set; }
         public DbSet<BranchProduct> branchproduct { get; set; }
+        public DbSet<Branch> branch { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -57,9 +56,9 @@ namespace OnlineShopPodaci
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=app.fit.ba,1431;Database=OnlineShopDB;Trusted_Connection=False; MultipleActiveResultSets=true;User=OnlineShopUser;Password=ANA116m125");
+            //optionsBuilder.UseSqlServer(@"Server=app.fit.ba,1431;Database=OnlineShopDB;Trusted_Connection=False; MultipleActiveResultSets=true;User=OnlineShopUser;Password=ANA116m125");
 
-            //optionsBuilder.UseSqlServer(@"Server=localhost;Database=nova;Trusted_Connection=True;MultipleActiveResultSets=true;");
+            optionsBuilder.UseSqlServer(@"Server=localhost;Database=nova2;Trusted_Connection=True;MultipleActiveResultSets=true;");
 
         }
 

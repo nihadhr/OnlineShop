@@ -38,17 +38,18 @@
     <br />
 
     <p>Proizvodjac</p>
-        <select name="manufacturerID">
-            <option>Odaberite proizvodjaca</option>
+    <select name="manufacturerID">
+        <option>Odaberite proizvodjaca</option>
 
-            @foreach (Manufacturer i in data3)
+        @foreach (Manufacturer i in data3)
+        {
+            if(proizvod.ManufacturerID==i.ManufacturerID)
             {
-                if(proizvod.ManufacturerID==i.ManufacturerID)
-                {
-                     <option value="@i.ManufacturerID" selected>@i.ManufacturerName</option>
-                }
+                 <option value="@i.ManufacturerID" selected>@i.ManufacturerName</option>
             }
-        </select>
+
+        }
+    </select>
     <br />
 
     <a href="/Product/AddManufacturer">Dodaj novog proizvodjaca</a>

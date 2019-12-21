@@ -1,10 +1,8 @@
 ﻿@using OnlineShopPodaci.Model;
 @{
-    //var cartdetails = (List<CartDetails>)ViewData["cartdetails"];
-    var suma = (decimal)ViewData["suma"];
 
 }
-
+@model List<OnlineShop.ViewModels.LookInCartVM>
 <!DOCTYPE html>
 
 <html>
@@ -13,38 +11,49 @@
     <title>LookInCart</title>
 </head>
 <body>
-    <h3 style="color:maroon">Artikli u košarici: </h3>
+    <h2 style="color:maroon">Košarica</h2> <br />
+    @if (Model.Count() == 0)
+    {
+        <h5>U košarici nema artikala.</h5> <br />
+        <a href="/Product/Show2">Kreni sa kupovinom.</a>
+    }
+
+    else
+    {
     <br />
     <br />
 
 
     <table border="1">
         <tr>
+            <th>Šifra proizvoda</th>
             <th>Naziv proizvoda</th>
+            <th>Kategorija</th>
             <th>Količina</th>
             <th>Cijena po komadu</th>
             <th>Ukupno</th>
             <th>Akcija</th>
 
         </tr>
-        @*@foreach (CartDetails cd in cartdetails)
+        @foreach (var x in Model)
         {
-            <tr>
-                <td>@cd.Product.ProductName</td>
-                <td>
-                @cd.Quantity
-                </td>
-                <td>@cd.Product.UnitPrice</td>
-                <td>@(cd.Quantity * cd.Product.UnitPrice)</td>
-                <td><a href="/Home/RemoveFromCart?productid=@cd.ProductID&cartid=@cd.CartID">Ukloni iz korpe</a></td>
-            </tr>
-        }*@
+    <tr>
+        <td>@x.ProductNumber</td>
+        <td>@x.ProductName</td>
+        <td>@x.SubCategoryName</td>
+        <td>@x.Quantity</td>
+        <td>@x.UnitPrice BAM</td>
+        <td>@(x.Quantity * x.UnitPrice) BAM</td>
+        <td><a href="/Home/RemoveFromCart?productid=@x.ProductID&userid=6">Ukloni iz korpe</a> </td>
+    </tr>
+        }
     </table>
 
     <br />
-    <h4>UKUPNO: @suma BAM</h4>
-    <br /><a href="/Home/DeleteCart">Očisti košaricu </a>
 
+
+    <br /><a href="/Home/DeleteCart?userid=6">Očisti košaricu </a>
     <br /><a href="/Product/Show2">Nazad u kupovinu</a>
+    }
 </body>
 </html>

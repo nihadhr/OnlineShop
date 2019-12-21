@@ -58,7 +58,7 @@ namespace OnlineShop.Controllers
             return View("AddProduct");
         }
 
-        public IActionResult SaveProduct(int ProductID, string productNumber, int subCategoryID, int manufacturerID, string productName, string imageURL, string description, decimal unitPrice)
+        public IActionResult SaveProduct(int ProductID, string productNumber, int subCategoryID, int manufacturerID, string productName, string imageURL, string description, double unitPrice)
         {
             OnlineShopContext _database = new OnlineShopContext();
 
@@ -137,6 +137,9 @@ namespace OnlineShop.Controllers
 
             return View(products);
         }
+
+
+
 
 
     }

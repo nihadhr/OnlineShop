@@ -1,6 +1,8 @@
 ﻿
 @{
     ViewData["Title"] = "ShowProducts";
+    var q = 1;
+
 }
 @model OnlineShop.ViewModels.ShowProductsVM;
 
@@ -26,8 +28,18 @@
                     </h4>
                     <p class="card-text">@i.UnitPrice</p>
                     <p class="card-text">@i.Manufacturer.ManufacturerName</p>
-
+                    <input type="number" id=@i.ProductName value="1" min="1" max="@i.UnitsInStock" onclick="SetQuantity(@i.ProductName)"/>
+                    <a href="/Home/AddToCart?productid=@i.ProductID&userid=6&q=@q">Dodaj u košaricu</a>
                 </div>
             </div>
         </div>
         }
+
+<script>
+
+    function SetQuantity(s) {
+        @q=document.getElementById(s).value;
+        
+    }
+
+</script>

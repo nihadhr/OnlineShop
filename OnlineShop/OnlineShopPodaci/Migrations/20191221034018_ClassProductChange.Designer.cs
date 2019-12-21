@@ -3,71 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopPodaci;
 
 namespace OnlineShopPodaci.Migrations
 {
     [DbContext(typeof(OnlineShopContext))]
-    partial class OnlineShopContextModelSnapshot : ModelSnapshot
+    [Migration("20191221034018_ClassProductChange")]
+    partial class ClassProductChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("OnlineShopPodaci.Model.Branch", b =>
-                {
-                    b.Property<int>("BranchID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Adress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BranchName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CityID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Close")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Open")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("BranchID");
-
-                    b.HasIndex("CityID");
-
-                    b.ToTable("branch");
-                });
-
-            modelBuilder.Entity("OnlineShopPodaci.Model.BranchProduct", b =>
-                {
-                    b.Property<int>("BranchID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitsInBranch")
-                        .HasColumnType("int");
-
-                    b.HasKey("BranchID", "ProductID");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("branchproduct");
-                });
 
             modelBuilder.Entity("OnlineShopPodaci.Model.CardType", b =>
                 {
@@ -287,47 +239,6 @@ namespace OnlineShopPodaci.Migrations
                     b.ToTable("product");
                 });
 
-            modelBuilder.Entity("OnlineShopPodaci.Model.Stock", b =>
-                {
-                    b.Property<int>("StockID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Adress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CityID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StockName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("StockID");
-
-                    b.HasIndex("CityID");
-
-                    b.ToTable("stock");
-                });
-
-            modelBuilder.Entity("OnlineShopPodaci.Model.StockProduct", b =>
-                {
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StockID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductID", "StockID");
-
-                    b.HasIndex("StockID");
-
-                    b.ToTable("stockproduct");
-                });
-
             modelBuilder.Entity("OnlineShopPodaci.Model.SubCategory", b =>
                 {
                     b.Property<int>("SubCategoryID")
@@ -399,30 +310,6 @@ namespace OnlineShopPodaci.Migrations
                     b.ToTable("user");
                 });
 
-            modelBuilder.Entity("OnlineShopPodaci.Model.Branch", b =>
-                {
-                    b.HasOne("OnlineShopPodaci.Model.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OnlineShopPodaci.Model.BranchProduct", b =>
-                {
-                    b.HasOne("OnlineShopPodaci.Model.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineShopPodaci.Model.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("OnlineShopPodaci.Model.Cart", b =>
                 {
                     b.HasOne("OnlineShopPodaci.Model.Product", "Product")
@@ -479,30 +366,6 @@ namespace OnlineShopPodaci.Migrations
                     b.HasOne("OnlineShopPodaci.Model.SubCategory", "SubCategory")
                         .WithMany()
                         .HasForeignKey("SubCategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OnlineShopPodaci.Model.Stock", b =>
-                {
-                    b.HasOne("OnlineShopPodaci.Model.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OnlineShopPodaci.Model.StockProduct", b =>
-                {
-                    b.HasOne("OnlineShopPodaci.Model.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineShopPodaci.Model.Stock", "Stock")
-                        .WithMany()
-                        .HasForeignKey("StockID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

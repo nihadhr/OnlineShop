@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OnlineShop.Models;
+using OnlineShop.ViewModels;
 using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
 
@@ -40,96 +41,68 @@ namespace OnlineShop.Controllers
         }
 
 
-       
-     
 
-        //public IActionResult AddToCart(int ID, int qID)
-        //{
-        //    OnlineShopContext novi = new OnlineShopContext();
-        //    List<Cart> cart = novi.cart.ToList();  //uzimam sve korpe, radi provjere da li već postoji neka i da li da pravim novu ili dodajem na postojeću CartID
-        //    if (cart.Count() == 0)
-        //    {
-        //        Cart newCart = new Cart();  //nema nijedne, kreiram novu Korpu  //bool aktivna korpa ? ?!?
-        //        novi.Add(newCart);
-        //        novi.SaveChanges();
-        //    }
 
-        //    int IDCart = novi.cart.ToList().Last().CartID;
+        
+        public IActionResult AddToCart(int productid,int userid=6,int q=1)
+        {
+            OnlineShopContext novi = new OnlineShopContext();
+            Cart singlerecord = novi.cart.SingleOrDefault(u => u.UserID == userid && u.ProductID == productid);
+            Product product = novi.product.Find(productid);
+            if (singlerecord != null) {
+                singlerecord.Quantity += q;
+                singlerecord.TotalPrice = (singlerecord.Quantity + q) * product.UnitPrice;
+            }
+            else
+            {
+                Cart newrecord = new Cart {
+                    UserID = userid,
+                    ProductID = productid,
+                    Quantity = q,
+                    TotalPrice = product.UnitPrice * q
+                };
+                novi.Add(newrecord);
 
-        //    if (novi.cartdetails.Find(IDCart, ID) != null)
-        //    {
-        //        novi.cartdetails.Find(IDCart, ID).Quantity += qID;  //ako već postoji samo povećaj količinu za datu
-        //    }
-        //    else
-        //    {
-        //        CartDetails newCartDetail = new CartDetails();
-        //        newCartDetail.CartID = IDCart;
-        //        newCartDetail.ProductID = ID;
-        //        newCartDetail.Quantity = qID;
-        //        novi.Add(newCartDetail);
+            }
+            novi.SaveChanges();
+            novi.Dispose();
+            return View("ItemAdded");
+        }
 
-        //    }
-        //    //funkcija za kalkulaciju polja TotalPrice u tabeli Cart
-
-        //    novi.SaveChanges();
-        //    CalculateTotalPrice(IDCart);
-        //    novi.Dispose();
-        //    return View("ItemAdded");
-        //}
-
-        //public void CalculateTotalPrice(int cartid)
-        //{
-        //    OnlineShopContext novi = new OnlineShopContext();
-        //    var SetTotalPrice = novi.cart.Find(cartid);
-        //    decimal sum = 0;
-        //    List<CartDetails> lista = novi.cartdetails.Include(s => s.Product).Include(c => c.Cart).ToList();
-        //    foreach (CartDetails cd in lista)
-        //    {
-        //        if (cd.CartID == cartid)
-        //            sum += cd.Quantity * cd.Product.UnitPrice;
-        //    }
-        //    SetTotalPrice.TotalPrice = sum;
-
-        //    novi.SaveChanges();
-        //    novi.Dispose();
-        //}
-        //public IActionResult LookInCart()
-        //{
-        //    OnlineShopContext novi = new OnlineShopContext();
-        //    var cd = novi.cartdetails.Include(cd => cd.Product).Include(cd => cd.Cart).ToList();
-        //    decimal sum = 0;
-        //    foreach (CartDetails CD in cd)
-        //        sum += CD.Product.UnitPrice * CD.Quantity;
-
-        //    ViewData["suma"] = sum;
-        //    ViewData["cartdetails"] = cd;
-        //    return View();
-        //}
-        //public IActionResult RemoveFromCart(int productid, int cartid)
-        //{
-
-        //    OnlineShopContext novi = new OnlineShopContext();
-        //    novi.cartdetails.Remove(novi.cartdetails.Find(cartid, productid));
-        //    novi.SaveChanges();  //nakon sto se obrise zapis gdje je productID i cartID odgovarajuci, ide snimanje izmjena 
-
-        //    CalculateTotalPrice(cartid);//rekalkulacija cijene u košarici.
-        //    novi.Dispose();
-        //    return View();
-        //}
-        //public IActionResult DeleteCart()  //naknadno ce se primati userid da se brise korpa iskljucivo tog korisnika, kao i za sve prethodne funkcionalnosti koje ce biti vezane i za userid
-        //{
-        //    OnlineShopContext novi = new OnlineShopContext();
-        //    List<Cart> lista = novi.cart.ToList();
-        //    var ID = lista.Last().CartID;  //pomocu .Find uz UserID ce se naci zapis poslije kad bude vezana korpa za userid
-        //    //List<CartDetails> cartdetails = novi.cartdetails.Include(p=>p.Product).Include(c=>c.Cart).ToList();
-        //    novi.cartdetails.Include(p => p.Product).Include(c => c.Cart).ToList().RemoveAll(c => c.CartID == ID); //obrisani svi zapisi iz CartDetails vezani za tu Korpu
-        //    novi.SaveChanges();
-        //    novi.cart.Remove(lista.SingleOrDefault(c => c.CartID == ID));
-        //    novi.SaveChanges();
-        //    novi.Dispose();
-        //    return View();
-        //}
-
+        
+        public IActionResult LookInCart(int userid=6)
+        {
+            OnlineShopContext novi = new OnlineShopContext();
+            List<Cart> listacart = novi.cart.Where(u => u.UserID == userid).ToList();
+            List<LookInCartVM> listavm = listacart
+            .Select(s => new LookInCartVM {
+                ProductID = s.ProductID,
+                ProductNumber = novi.product.Find(s.ProductID).ProductNumber,
+                ProductName = novi.product.Find(s.ProductID).ProductName,
+                SubCategoryName = novi.subcategory.Find(novi.product.Find(s.ProductID).SubCategoryID).SubCategoryName,
+                UnitPrice = novi.product.Find(s.ProductID).UnitPrice,
+                Quantity=s.Quantity
+            }
+            ).ToList();
+            novi.Dispose();
+            return View(listavm);
+        }
+        public IActionResult RemoveFromCart(int productid,int userid)
+        {
+            OnlineShopContext novi = new OnlineShopContext();
+            novi.cart.Remove(novi.cart.SingleOrDefault(p => p.ProductID == productid && p.UserID == userid));
+            novi.SaveChanges();
+            novi.Dispose();
+            return Redirect("LookInCart");
+        }
+        public IActionResult DeleteCart(int userid)  
+        {
+            OnlineShopContext novi = new OnlineShopContext();
+            novi.cart.RemoveRange(novi.cart.Where(p =>p.UserID == userid));
+            novi.SaveChanges();
+            novi.Dispose();
+            return Redirect("LookInCart");
+        }
 
 
         // LOGIN 

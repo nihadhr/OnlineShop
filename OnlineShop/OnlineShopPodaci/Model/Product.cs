@@ -23,7 +23,7 @@ namespace OnlineShopPodaci.Model
         public string ProductName { get; set; }
         public string ImageUrl { get; set; }
         public string Description { get; set; }
-        public decimal UnitPrice { get; set; }
+        public double UnitPrice { get; set; }
         public int UnitsInStock { get; set; }
         
     }

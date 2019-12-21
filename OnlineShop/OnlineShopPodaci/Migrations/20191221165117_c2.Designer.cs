@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopPodaci;
 
 namespace OnlineShopPodaci.Migrations
 {
     [DbContext(typeof(OnlineShopContext))]
-    partial class OnlineShopContextModelSnapshot : ModelSnapshot
+    [Migration("20191221165117_c2")]
+    partial class c2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +50,7 @@ namespace OnlineShopPodaci.Migrations
 
                     b.HasIndex("CityID");
 
-                    b.ToTable("branch");
+                    b.ToTable("Branch");
                 });
 
             modelBuilder.Entity("OnlineShopPodaci.Model.BranchProduct", b =>
@@ -66,7 +68,7 @@ namespace OnlineShopPodaci.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("branchproduct");
+                    b.ToTable("BranchProduct");
                 });
 
             modelBuilder.Entity("OnlineShopPodaci.Model.CardType", b =>
@@ -307,7 +309,7 @@ namespace OnlineShopPodaci.Migrations
 
                     b.HasIndex("CityID");
 
-                    b.ToTable("stock");
+                    b.ToTable("Stock");
                 });
 
             modelBuilder.Entity("OnlineShopPodaci.Model.StockProduct", b =>
@@ -325,7 +327,7 @@ namespace OnlineShopPodaci.Migrations
 
                     b.HasIndex("StockID");
 
-                    b.ToTable("stockproduct");
+                    b.ToTable("StockProduct");
                 });
 
             modelBuilder.Entity("OnlineShopPodaci.Model.SubCategory", b =>

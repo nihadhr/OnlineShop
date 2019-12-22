@@ -32,7 +32,7 @@
                     <p class="card-text">@i.UnitPrice</p>
                     <p class="card-text">@i.ManufacturerName</p>
                     <input type="number" id=@i.ProductName value="1" min="0" max="@i.UnitsInStock" onclick="SetQuantity(@i.ProductName)"/>
-                    <a href="/Home/AddToCart?productid=@i.ProductID&userid=6&q=@q">Dodaj u košaricu</a>
+                    <a href="/Cart/AddToCart?productid=@i.ProductID&userid=6&q=@q">Dodaj u košaricu</a>
                 </div>
             </div>
         </div>

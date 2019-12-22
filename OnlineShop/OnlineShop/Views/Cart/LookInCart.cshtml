@@ -44,7 +44,7 @@
         <td>@x.Quantity</td>
         <td>@x.UnitPrice BAM</td>
         <td>@(x.Quantity * x.UnitPrice) BAM</td>
-        <td><a href="/Home/RemoveFromCart?productid=@x.ProductID&userid=6">Ukloni iz korpe</a> </td>
+        <td><a href="/Cart/RemoveFromCart?productid=@x.ProductID&userid=6">Ukloni iz korpe</a> </td>
     </tr>
         }
     </table>
@@ -52,7 +52,7 @@
     <br />
 
 
-    <br /><a href="/Home/DeleteCart?userid=6">Očisti košaricu </a>
+    <br /><a href="/Cart/DeleteCart?userid=6">Očisti košaricu </a>
     <br /><a href="/Product/Show2">Nazad u kupovinu</a>
     }
 </body>

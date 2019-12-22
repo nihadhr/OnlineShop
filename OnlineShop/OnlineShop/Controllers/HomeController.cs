@@ -15,6 +15,7 @@ namespace OnlineShop.Controllers
 {
     public class HomeController : Controller
     {
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -39,71 +40,6 @@ namespace OnlineShop.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-
-
-
-        
-        public IActionResult AddToCart(int productid,int userid=6,int q=1)
-        {
-            OnlineShopContext novi = new OnlineShopContext();
-            Cart singlerecord = novi.cart.SingleOrDefault(u => u.UserID == userid && u.ProductID == productid);
-            Product product = novi.product.Find(productid);
-            if (singlerecord != null) {
-                singlerecord.Quantity += q;
-                singlerecord.TotalPrice = (singlerecord.Quantity + q) * product.UnitPrice;
-            }
-            else
-            {
-                Cart newrecord = new Cart {
-                    UserID = userid,
-                    ProductID = productid,
-                    Quantity = q,
-                    TotalPrice = product.UnitPrice * q
-                };
-                novi.Add(newrecord);
-
-            }
-            novi.SaveChanges();
-            novi.Dispose();
-            return View("ItemAdded");
-        }
-
-        
-        public IActionResult LookInCart(int userid=6)
-        {
-            OnlineShopContext novi = new OnlineShopContext();
-            List<Cart> listacart = novi.cart.Where(u => u.UserID == userid).ToList();
-            List<LookInCartVM> listavm = listacart
-            .Select(s => new LookInCartVM {
-                ProductID = s.ProductID,
-                ProductNumber = novi.product.Find(s.ProductID).ProductNumber,
-                ProductName = novi.product.Find(s.ProductID).ProductName,
-                SubCategoryName = novi.subcategory.Find(novi.product.Find(s.ProductID).SubCategoryID).SubCategoryName,
-                UnitPrice = novi.product.Find(s.ProductID).UnitPrice,
-                Quantity=s.Quantity
-            }
-            ).ToList();
-            novi.Dispose();
-            return View(listavm);
-        }
-        public IActionResult RemoveFromCart(int productid,int userid)
-        {
-            OnlineShopContext novi = new OnlineShopContext();
-            novi.cart.Remove(novi.cart.SingleOrDefault(p => p.ProductID == productid && p.UserID == userid));
-            novi.SaveChanges();
-            novi.Dispose();
-            return Redirect("LookInCart");
-        }
-        public IActionResult DeleteCart(int userid)  
-        {
-            OnlineShopContext novi = new OnlineShopContext();
-            novi.cart.RemoveRange(novi.cart.Where(p =>p.UserID == userid));
-            novi.SaveChanges();
-            novi.Dispose();
-            return Redirect("LookInCart");
-        }
-
 
         // LOGIN 
 

@@ -130,9 +130,10 @@ namespace OnlineShop.Controllers
         public IActionResult ShowSubcategories(int ID)
         {
 
-            List<ShowSubCategoriesVM> lista = _database.subcategory.Select(s => new ShowSubCategoriesVM
+            List<ShowSubCategoriesVM> lista = _database.subcategory.Where(s => s.CategoryID == ID).
+                Select(s => new ShowSubCategoriesVM
             {
-                CategoryName=_database.category.Where(c=>c.CategoryID==s.CategoryID).SingleOrDefault().CategoryName,
+                CategoryName=_database.category.Where(c=>c.CategoryID==ID).SingleOrDefault().CategoryName,
                 SubCategoryID=s.SubCategoryID,
                 SubCategoryName=s.SubCategoryName
             }).ToList();

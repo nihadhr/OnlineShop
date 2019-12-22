@@ -9,7 +9,8 @@ namespace OnlineShop.ViewModels
     public class ShowSubCategoriesVM
     {
         public string CategoryName { get; set; }
-        public List<SubCategory> Subcategorylist { get; set; }
+        public int SubCategoryID { get; set; }
+        public string  SubCategoryName { get; set; }
 
 
 

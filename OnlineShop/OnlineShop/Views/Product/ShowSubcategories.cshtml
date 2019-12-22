@@ -1,12 +1,16 @@
 ﻿@using OnlineShopPodaci.Model;
+@using OnlineShop.ViewModels;
+
+
+@model List<ShowSubCategoriesVM>
 
 @{
     ViewData["Title"] = "ShowSubcategories";
 
 }
-@model OnlineShop.ViewModels.ShowSubCategoriesVM;
 
-<h1>@Model.CategoryName</h1>
+
+<h1>@Model.FirstOrDefault().CategoryName</h1>
 <br />
 
 <style>
@@ -17,18 +21,18 @@
     }
 </style>
 
-@foreach (var x in Model.Subcategorylist)
+@foreach (var x in Model)
 {
-        <div id="maindiv" class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100">
-                <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                <div class="card-body">
-                    <h4 class="card-title">
-                        <a href="/Product/ShowProducts?ID=@x.SubCategoryID">@x.SubCategoryName</a>
-                    </h4>
-                </div>
+    <div id="maindiv" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card h-100">
+            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+            <div class="card-body">
+                <h4 class="card-title">
+                    <a href="/Product/ShowProducts?ID=@x.SubCategoryID">@x.SubCategoryName</a>
+                </h4>
             </div>
         </div>
+    </div>
 }
 
 

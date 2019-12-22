@@ -1,10 +1,13 @@
 ﻿
+@using OnlineShop.ViewModels
+
 @{
     ViewData["Title"] = "ShowProducts";
     var q = 1;
 
 }
-@*@model OnlineShop.ViewModels.ShowProductsVM;*@
+
+@model List<ShowProductsVM>
 
 <h1>Prikaz proizvoda podkategorije</h1>
 
@@ -17,7 +20,7 @@
     }
 </style>
 
-@foreach (var i in Model.products)
+@foreach (var i in Model)
 {
         <div id="maindiv" class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100">
@@ -27,8 +30,8 @@
                         <a href="#">@i.ProductName</a>
                     </h4>
                     <p class="card-text">@i.UnitPrice</p>
-                    <p class="card-text">@i.Manufacturer.ManufacturerName</p>
-                    <input type="number" id=@i.ProductName value="1" min="1" max="@i.UnitsInStock" onclick="SetQuantity(@i.ProductName)"/>
+                    <p class="card-text">@i.ManufacturerName</p>
+                    <input type="number" id=@i.ProductName value="1" min="0" max="@i.UnitsInStock" onclick="SetQuantity(@i.ProductName)"/>
                     <a href="/Home/AddToCart?productid=@i.ProductID&userid=6&q=@q">Dodaj u košaricu</a>
                 </div>
             </div>

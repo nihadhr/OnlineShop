@@ -65,7 +65,7 @@ namespace OnlineShop.Controllers
                 ProductNumber=temp.ProductNumber,
                 SubCategoryID=temp.SubCategoryID,
                 Subcategories=_database.subcategory.Select(s=> new SelectListItem { Value = s.SubCategoryID.ToString(), Text = s.SubCategoryName }).ToList(),
-                ManufacturerID = temp.SubCategoryID,
+                ManufacturerID = temp.ManufacturerID,
                 Manufacturers = _database.manufacturer.Select(s => new SelectListItem { Value = s.ManufacturerID.ToString(), Text = s.ManufacturerName }).ToList(),
                 ProductName=temp.ProductName,
                 ImageURL=temp.ImageUrl,
@@ -86,8 +86,8 @@ namespace OnlineShop.Controllers
             }
             else
                 neki = _database.product.Find(model.ProductID);
+            
 
-            _database.Update(neki);
             neki.ProductNumber = model.ProductNumber;
             neki.SubCategoryID = model.SubCategoryID;
             neki.ManufacturerID = model.ManufacturerID;
@@ -97,60 +97,65 @@ namespace OnlineShop.Controllers
             neki.UnitPrice = model.UnitPrice;
 
             _database.SaveChanges();
-            return View("ProductAddMessage");
+            return Redirect("/Product/Show");
+
         }
 
-        public IActionResult AddManufacturer()
+        public IActionResult AddManufacturer(int ProductID)
         {
+            ViewData["idP"] =ProductID;
             return View("AddManufacturer");
         }
 
-        public IActionResult SaveManufacture(string manufacturerName, string logoURL)
+        public IActionResult SaveManufacturer(string manufacturerName, string logoURL,int ProductID)
         {
-            OnlineShopContext _database = new OnlineShopContext();
-
             Manufacturer manufacturer = new Manufacturer
             {
                 ManufacturerName = manufacturerName,
                 LogoUrl = logoURL
             };
 
-
             _database.manufacturer.Add(manufacturer);
             _database.SaveChanges();
-            return View("ManufactureAddMessage");
+            return Redirect($"/Product/AddProduct?={ProductID}");
+
         }
         public IActionResult Show2()
         {
-
-            OnlineShopContext novi = new OnlineShopContext();
-            List<Product> lista = novi.product.Include(s => s.SubCategory).Include(f => f.Manufacturer).ToList();
-            ViewData["kljuc"] = lista;
-
-            var categories = novi.category.ToList();
-            ViewData["test"] = categories;
-
-            novi.Dispose();
-            return View(categories);
+           List<ShowCategoriesVM >data = _database.category.Select(c => new ShowCategoriesVM { CategoryID = c.CategoryID, CategoryName = c.CategoryName }).ToList();
+            
+            return View(data);
         }
 
         public IActionResult ShowSubcategories(int ID)
         {
-            OnlineShopContext _database = new OnlineShopContext();
 
-            ShowSubCategoriesVM lista = new ShowSubCategoriesVM { CategoryName = _database.category.Find(ID).CategoryName, 
-                Subcategorylist = _database.subcategory.Where(s => s.CategoryID == ID).ToList() };
-            return View("ShowSubcategories",lista);
+            List<ShowSubCategoriesVM> lista = _database.subcategory.Select(s => new ShowSubCategoriesVM
+            {
+                CategoryName=_database.category.Where(c=>c.CategoryID==s.CategoryID).SingleOrDefault().CategoryName,
+                SubCategoryID=s.SubCategoryID,
+                SubCategoryName=s.SubCategoryName
+            }).ToList();
+
+            return View(lista);
         }
 
-        //public IActionResult ShowProducts(int ID)
-        //{
-        //    OnlineShopContext baza = new OnlineShopContext();
+        public IActionResult ShowProducts(int ID)
+        {
 
-        //    ShowProductsVM products = new ShowProductsVM { products = baza.product.Where(p => p.SubCategoryID == ID).Include(a=>a.Manufacturer).ToList() };
+            List<ShowProductsVM> products = _database.product.Where(s => s.SubCategoryID == ID).
+                Select(p => new ShowProductsVM
+            {
+                ProductID=p.ProductID,
+                ProductName=p.ProductName,
+                ManufacturerName=p.Manufacturer.ManufacturerName,
+                UnitPrice=p.UnitPrice,
+                UnitsInStock=p.UnitsInStock
 
-        //    return View(products);
-        //}
+            }).ToList();
+
+            return View(products);
+        }
 
 
 

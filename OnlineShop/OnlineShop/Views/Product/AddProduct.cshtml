@@ -16,26 +16,26 @@
 
 
     <p>Broj proizvoda</p>
-    <input type="text" asp-for="ProductNumber" value="@Model.ProductNumber" />
+    <input type="text" asp-for="ProductNumber" value="@Model.ProductNumber" required />
     <br />
 
     <p>Podkategorija</p>
-    <select asp-for="SubCategoryID" asp-items="@Model.Subcategories">
+    <select asp-for="SubCategoryID" asp-items="@Model.Subcategories" required>
         <option>Odaberite podkategoriju proizvoda</option>
     </select>
     <br />
 
     <p>Proizvodjac</p>
-    <select asp-for="ManufacturerID" asp-items="@Model.Manufacturers">
+    <select asp-for="ManufacturerID" asp-items="@Model.Manufacturers" required>
         <option>Odaberite proizvodjaca</option>
     </select>
     <br />
 
+    <a href="/Product/AddManufacturer?ProductID=@Model.ProductID">Dodaj novog proizvodjaca</a>
 
-    <a href="/Product/AddManufacturer">Dodaj novog proizvodjaca</a>
     <br />
     <p>Naziv proizvoda</p>
-    <input type="text" asp-for="ProductName" value="@Model.ProductName" />
+    <input type="text" asp-for="ProductName" value="@Model.ProductName" required />
     <br />
 
     <p>URL slike</p>
@@ -47,11 +47,12 @@
     <br />
 
     <p>Cijena</p>
-    <input type="text" asp-for="UnitPrice" value="@Model.UnitPrice" />
+    <input type="text" asp-for="UnitPrice" value="@Model.UnitPrice" required/>
     <br /><br />
 
     <input type="submit" value="POTVRDI" />
 </form>
-
+<script>
+   
 
 

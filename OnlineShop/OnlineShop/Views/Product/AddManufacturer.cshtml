@@ -1,11 +1,12 @@
 ﻿
 @{
     ViewData["Title"] = "AddManufactures";
+    var idP = ViewData["idP"];
 }
 
 <h1>Dodaj novog proizvodjaca</h1>
 
-<form action="/Product/SaveManufacture">
+<form action="/Product/SaveManufacturer">
 
     <p>Naziv proizvodjaca</p>
     <input type="text" name="manufacturerName" />
@@ -15,12 +16,13 @@
     <input type="url" name="logoURL" />
     <br /><br />
 
+    <input style="display:none" name="ProductID" value="@idP"/>
 
     <input type="submit" value="POTVRDI" />
 </form>
 
 <br />
-<form action="/Product/AddProduct">
+<form action="/Product/AddProduct?ProductID=@idP">
 
     <input type="submit" value="Nazad" />
 </form>

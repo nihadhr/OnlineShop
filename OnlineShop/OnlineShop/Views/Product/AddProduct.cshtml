@@ -1,71 +1,53 @@
 ﻿@using OnlineShopPodaci.Model;
 
+@model OnlineShop.ViewModels.AddOrUpdateProductVM
+
 @{
-    ViewData["Title"] = "AddProduct";
-
-    List<SubCategory> data2 = ViewData["key2"] as List<SubCategory>;
-
-    List<Manufacturer> data3 = ViewData["key3"] as List<Manufacturer>;
-
-    var proizvod = ViewData["data"] as Product;
+    ViewData["Title"] = "Dodaj proizvod";
 }
 
 <h1>Dodaj ili izmjeni proizvod</h1>
 <br />
 <br />
 
-<form action="/Product/SaveProduct">
+<form asp-action="SaveProduct">
 
-    <input name="productID" value="@proizvod.ProductID" style="display:none" />            
+    <input asp-for="ProductID" value="@Model.ProductID" style="display:none" />
 
 
     <p>Broj proizvoda</p>
-    <input type="text" name="productNumber" value="@proizvod.ProductNumber" />
+    <input type="text" asp-for="ProductNumber" value="@Model.ProductNumber" />
     <br />
 
     <p>Podkategorija</p>
-        <select name="subCategoryID">
-            <option>Odaberite podkategoriju</option>
-
-            @foreach (SubCategory i in data2)
-            {
-                if(proizvod.SubCategoryID==i.SubCategoryID)
-                {
-                    <option value="@i.SubCategoryID" selected>@i.SubCategoryName</option>
-                }
-            }
-        </select>
+    <select asp-for="SubCategoryID" asp-items="@Model.Subcategories">
+        <option>Odaberite podkategoriju proizvoda</option>
+    </select>
     <br />
 
     <p>Proizvodjac</p>
-    <select name="manufacturerID">
-        @*<option>Odaberite proizvodjaca</option>*@
-        <option value="Izaberi" selected disabled>Izaberi</option>
-
-        @foreach (Manufacturer i in data3)
-        {
-            <option value="@i.ManufacturerID">@i.ManufacturerName</option>
-
-        }
+    <select asp-for="ManufacturerID" asp-items="@Model.Manufacturers">
+        <option>Odaberite proizvodjaca</option>
     </select>
     <br />
+
 
     <a href="/Product/AddManufacturer">Dodaj novog proizvodjaca</a>
     <br />
     <p>Naziv proizvoda</p>
-    <input type="text" name="productName" value="@proizvod.ProductName" />
+    <input type="text" asp-for="ProductName" value="@Model.ProductName" />
     <br />
 
     <p>URL slike</p>
-    <input type="url" name="imageURL" value="@proizvod.ImageUrl" />
+    <input type="url" asp-for="ImageURL" value="@Model.ImageURL" />
     <br />
 
     <p>Opis</p>
-    <input type="text" style="width:200px; height:150px;" name="description" value="@proizvod.Description" />
+    <input type="text" style="width:200px; height:150px;" asp-for="Description" value="@Model.Description" />
     <br />
 
     <p>Cijena</p>
-    <input type="text" name="unitPrice" value="@proizvod.UnitPrice" />
+    <input type="text" asp-for="UnitPrice" value="@Model.UnitPrice" />
     <br /><br />
 
     <input type="submit" value="POTVRDI" />

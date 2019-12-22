@@ -8,6 +8,14 @@ namespace OnlineShopPodaci
 {
     public class OnlineShopContext:DbContext
     {
+        public OnlineShopContext(DbContextOptions opcije):base(opcije){
+        
+        }
+        public OnlineShopContext()
+        {
+
+        }
+
         public DbSet<User> user { get; set; }
         public DbSet<CardType> cardtype { get; set; }
         public DbSet<CreditCard> creditcard { get; set; }
@@ -57,8 +65,10 @@ namespace OnlineShopPodaci
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlServer(@"Server=app.fit.ba,1431;Database=OnlineShopDB;Trusted_Connection=False; MultipleActiveResultSets=true;User=OnlineShopUser;Password=ANA116m125");
-
-            optionsBuilder.UseSqlServer(@"Server=localhost;Database=nova2;Trusted_Connection=True;MultipleActiveResultSets=true;");
+            
+            //OVDJE VISE NIJE POTREBNO NAVODITI KONEKCIJSKI STRING
+           
+            // optionsBuilder.UseSqlServer(@"Server=localhost;Database=nova2;Trusted_Connection=True;MultipleActiveResultSets=true;");
 
         }
 

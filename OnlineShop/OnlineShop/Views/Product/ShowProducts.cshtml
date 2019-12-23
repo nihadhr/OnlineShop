@@ -1,5 +1,4 @@
-﻿
-@using OnlineShop.ViewModels
+﻿@using OnlineShop.ViewModels
 
 @{
     ViewData["Title"] = "ShowProducts";
@@ -9,15 +8,23 @@
 
 @model List<ShowProductsVM>
 
-<h1>Prikaz proizvoda podkategorije</h1>
+<h1>Prikaz proizvoda podkategorije</h1>             <!-- fali parametar subcategory name da se prikaze ime podkategorije-->
 
 <style>
     #maindiv{
         width:25%;
         float:left;
         margin:10px;
-        height:300px;
+        height:350px;
+        padding:0px;
+        border-radius: 5px;
     }
+
+    #maindiv:hover{
+        opacity:0.9;
+        border:1px solid black;
+    }
+
 </style>
 
 @foreach (var i in Model)
@@ -27,10 +34,10 @@
                 <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                 <div class="card-body">
                     <h4 class="card-title">
-                        <a href="#">@i.ProductName</a>
+                        <a href="/Product/ProductDetails?ID=@i.ProductID">@i.ProductName</a>
                     </h4>
-                    <p class="card-text">@i.UnitPrice</p>
-                    <p class="card-text">@i.ManufacturerName</p>
+                    <p class="card-text">Cijena : @i.UnitPrice   KM</p>
+                    <p class="card-text">Proizvođač : @i.ManufacturerName</p>
                     <input type="number" id=@i.ProductName value="1" min="0" max="@i.UnitsInStock" onclick="SetQuantity(@i.ProductName)"/>
                     <a href="/Cart/AddToCart?productid=@i.ProductID&userid=6&q=@q">Dodaj u košaricu</a>
                 </div>

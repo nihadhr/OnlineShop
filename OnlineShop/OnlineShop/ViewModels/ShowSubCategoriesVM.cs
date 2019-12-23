@@ -12,7 +12,5 @@ namespace OnlineShop.ViewModels
         public int SubCategoryID { get; set; }
         public string  SubCategoryName { get; set; }
 
-
-
     }
 }

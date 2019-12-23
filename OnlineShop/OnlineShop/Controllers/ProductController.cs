@@ -21,6 +21,7 @@ namespace OnlineShop.Controllers
             product = p;
             _database = b;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -39,18 +40,14 @@ namespace OnlineShop.Controllers
                 UnitPrice = p.UnitPrice
             });
             var data = new SohwProductForManageLIST { ListOfProducts = productForView };
-                
-            
 
             return View(data);
         }
-
 
         public IActionResult Delete(int ID)
         {
             product.RemoveProduct(ID);
             return Redirect("/Product/Show");
-
         }
 
         public IActionResult AddProduct(int ProductID)
@@ -120,16 +117,15 @@ namespace OnlineShop.Controllers
             return Redirect($"/Product/AddProduct?={ProductID}");
 
         }
-        public IActionResult Show2()
+        public IActionResult Show2()       
         {
            List<ShowCategoriesVM >data = _database.category.Select(c => new ShowCategoriesVM { CategoryID = c.CategoryID, CategoryName = c.CategoryName }).ToList();
             
             return View(data);
         }
 
-        public IActionResult ShowSubcategories(int ID)
+        public IActionResult ShowSubcategories(int ID)          // ID kategorije
         {
-
             List<ShowSubCategoriesVM> lista = _database.subcategory.Where(s => s.CategoryID == ID).
                 Select(s => new ShowSubCategoriesVM
             {
@@ -141,7 +137,7 @@ namespace OnlineShop.Controllers
             return View(lista);
         }
 
-        public IActionResult ShowProducts(int ID)
+        public IActionResult ShowProducts(int ID)       // ID podkategorije 
         {
 
             List<ShowProductsVM> products = _database.product.Where(s => s.SubCategoryID == ID).
@@ -158,9 +154,22 @@ namespace OnlineShop.Controllers
             return View(products);
         }
 
+        public IActionResult ProductDetails(int ID)     // ID proizvoda
+        {
+            ProductDetailsVM model = _database.product.Where(s=>s.ProductID==ID).Select(a => new ProductDetailsVM
+            {
+                ProductID =a.ProductID,
+                ProductName=a.ProductName,
+                ProductNumber =a.ProductNumber,
+                SubCategoryName=a.SubCategory.SubCategoryName,
+                ManufacturerName=a.Manufacturer.ManufacturerName,
+                ImageUrl=a.ImageUrl,
+                Description=a.Description,
+                UnitPrice=a.UnitPrice,
+                UnitsInStock=a.UnitsInStock         // uvijek je 0 tamo
+            }).SingleOrDefault();
 
-
-
-
+            return View(model);
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "ShowProducts";
-    var q = 1;
+    
 
 }
 
@@ -14,7 +14,7 @@
     #maindiv{
         width:25%;
         float:left;
-        margin:10px;
+        margin:5px;
         height:350px;
         padding:0px;
         border-radius: 5px;
@@ -24,8 +24,31 @@
         opacity:0.9;
         border:1px solid black;
     }
+    #Added{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height:50px;
+    padding: 15px 25px 15px 10px;
+    line-height: 16px;
+    color: #fff;
+    background-color: #91BD09;
+    opacity: 0.95;
+    text-align:center;
+    box-sizing:border-box;
+    border-radius:4px;
+    }
 
 </style>
+
+
+<div id="Added">
+    Artikal uspješno dodan u korpu !
+</div><br />
+
 
 @foreach (var i in Model)
 {
@@ -38,8 +61,8 @@
                     </h4>
                     <p class="card-text">Cijena : @i.UnitPrice   KM</p>
                     <p class="card-text">Proizvođač : @i.ManufacturerName</p>
-                    <input type="number" id=@i.ProductName value="1" min="0" max="@i.UnitsInStock" onclick="SetQuantity(@i.ProductName)"/>
-                    <a href="/Cart/AddToCart?productid=@i.ProductID&userid=6&q=@q">Dodaj u košaricu</a>
+                    <input type="number" id="@i.ProductID" value="1" min="1" />
+                    <button onclick="AddToCart(@i.ProductID)">Dodaj u košaricu</button>
                 </div>
             </div>
         </div>
@@ -47,9 +70,21 @@
 
 <script>
 
-    function SetQuantity(s) {
-        @q=document.getElementById(s).value;
-        
+    function AddToCart(id) {
+
+        var quantity = document.getElementById(id).value;
+        //user,productid,quantity are sent
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () { };
+        request.open('POST', "/Cart/AddToCart/?productid=" + id + "&userid=" + 6 + "&q=" + quantity);
+        request.send()
+        document.getElementById(id).value = 1;
+        document.getElementById("Added").style.display = "block";
+        setTimeout(function() {
+        document.getElementById("Added").style.display = "none"; }, 3500);
+               
+        //alert("Proizvod dodan u korpu !");
     }
+   
 
 </script>

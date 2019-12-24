@@ -52,7 +52,11 @@ namespace OnlineShop.Controllers
             return Redirect("LookInCart");
         }
 
-
+        public IActionResult SetQuantity(int productid,int userid,int q)
+        {
+            
+            return Redirect("LookInCart");
+        }
 
 
         public IActionResult Index()

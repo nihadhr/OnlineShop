@@ -18,6 +18,7 @@ namespace OnlineShopServices
 
         public void AddToCart(int productid, int userid, int q)
         {
+            
             Cart singlerecord = _database.cart.SingleOrDefault(u => u.UserID == userid && u.ProductID == productid);
             Product product = _database.product.Find(productid);
             if (singlerecord != null)
@@ -55,6 +56,14 @@ namespace OnlineShopServices
         public void RemoveCartItem(int productid, int userid)
         {
             _database.cart.Remove(_database.cart.SingleOrDefault(p => p.ProductID == productid && p.UserID == userid));
+            _database.SaveChanges();
+        }
+
+        public void ChangeQuantity(int productid, int userid, int q)
+        {
+            if (q == 0) { RemoveCartItem(productid, userid); return; }
+            var obj = _database.cart.SingleOrDefault(s => s.UserID == userid && s.ProductID == productid);
+            obj.Quantity = q;
             _database.SaveChanges();
         }
     }

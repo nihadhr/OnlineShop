@@ -5,6 +5,24 @@
 @model List<OnlineShop.ViewModels.LookInCartVM>
 <!DOCTYPE html>
 
+<style>#QuantityChangeMsg{
+        display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height:50px;
+    padding: 15px 25px 15px 10px;
+    line-height: 16px;
+    color: #fff;
+    background-color: #91BD09;
+    opacity: 0.95;
+    text-align:center;
+    box-sizing:border-box;
+    border-radius:4px;
+    }</style>
+
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -20,6 +38,7 @@
 
     else
     {
+        <div id="QuantityChange">Uspješno ažurirana količina</div>
     <br />
     <br />
 
@@ -41,7 +60,7 @@
         <td>@x.ProductNumber</td>
         <td>@x.ProductName</td>
         <td>@x.SubCategoryName</td>
-        <td>@x.Quantity</td>
+        <td><input type="text" pattern="[0-10]" required min="0" id="@x.ProductID" value="@x.Quantity"/></td>
         <td>@x.UnitPrice BAM</td>
         <td>@(x.Quantity * x.UnitPrice) BAM</td>
         <td><a href="/Cart/RemoveFromCart?productid=@x.ProductID&userid=6">Ukloni iz korpe</a> </td>
@@ -50,10 +69,39 @@
     </table>
 
     <br />
-
-
+  <br />
     <br /><a href="/Cart/DeleteCart?userid=6">Očisti košaricu </a>
-    <br /><a href="/Product/Show2">Nazad u kupovinu</a>
+    <br /><a href="/Product/Show2">Nazad na kupnju</a>
     }
 </body>
 </html>
+
+<script>
+
+    //ne valja nista
+        var field = document.getElementById(id);
+        var quantity = document.getElementById(id).value;
+
+        field.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () { };
+        request.open('POST', "/Cart/SetQuantity/?productid=" + id + "&userid=" + 6 + "&q=" + quantity);
+        request.send()
+        document.getElementById(id).value = 1;
+        document.getElementById("QuantityChangeMsg").style.display = "block";
+        setTimeout(function () {
+            document.getElementById("QuantityChangeMsg").style.display = "none";
+        }, 2500);
+
+        location.reload();
+            }
+        });
+        //user,productid,quantity are sent
+        
+
+        //alert("Proizvod dodan u korpu !");
+
+
+
+</script>

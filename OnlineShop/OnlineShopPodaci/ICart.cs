@@ -14,6 +14,8 @@ namespace OnlineShopPodaci
         public void RemoveCartItem(int productid, int userid);
 
         public void RemoveAllCartItems(int userid);
+
+        public void ChangeQuantity(int productid, int userid, int q);
         
     }
 }

@@ -5,7 +5,8 @@
 @model List<OnlineShop.ViewModels.LookInCartVM>
 <!DOCTYPE html>
 
-<style>#QuantityChangeMsg{
+<style>
+    #QuantityChangeMsg{
         display: none;
     position: fixed;
     top: 0;
@@ -21,7 +22,8 @@
     text-align:center;
     box-sizing:border-box;
     border-radius:4px;
-    }</style>
+    }
+</style>
 
 <html>
 <head>
@@ -38,35 +40,53 @@
 
     else
     {
-        <div id="QuantityChange">Uspješno ažurirana količina</div>
+        <div id="QuantityChangeMsg">Uspješno ažurirana količina</div>
     <br />
     <br />
 
+    <div id="tabela">
+        <table border="1">
+            <tr>
+                <th>Šifra proizvoda</th>
+                <th>Naziv proizvoda</th>
+                <th>Kategorija</th>
+                <th>Količina</th>
+                <th>Cijena po komadu</th>
+                <th>Ukupno</th>
+                <th>Akcija</th>
 
-    <table border="1">
-        <tr>
-            <th>Šifra proizvoda</th>
-            <th>Naziv proizvoda</th>
-            <th>Kategorija</th>
-            <th>Količina</th>
-            <th>Cijena po komadu</th>
-            <th>Ukupno</th>
-            <th>Akcija</th>
+            </tr>
+            @foreach (var x in Model)
+            {
+                <tr>
+                    <td>@x.ProductNumber</td>
+                    <td>@x.ProductName</td>
+                    <td>@x.SubCategoryName</td>
+                    <td>
+                        @*<input type="text" pattern="[0-10]" required min="0" id="@x.ProductID" value="@x.Quantity"/>*@
 
-        </tr>
-        @foreach (var x in Model)
-        {
-    <tr>
-        <td>@x.ProductNumber</td>
-        <td>@x.ProductName</td>
-        <td>@x.SubCategoryName</td>
-        <td><input type="text" pattern="[0-10]" required min="0" id="@x.ProductID" value="@x.Quantity"/></td>
-        <td>@x.UnitPrice BAM</td>
-        <td>@(x.Quantity * x.UnitPrice) BAM</td>
-        <td><a href="/Cart/RemoveFromCart?productid=@x.ProductID&userid=6">Ukloni iz korpe</a> </td>
-    </tr>
+                    <select id="@x.ProductID" onchange="Sett(@x.ProductID)">
+                        @for (int i = 1; i <= 10; i++) //ovdje ce biti iz VM units in stock value za kraj for petlje
+                        {
+                            if (i == x.Quantity)
+                            {
+                                <option selected value="@i">@i</option>
+}
+                            else
+                            {
+                                <option value="@i">@i</option>
+}
+                        }
+
+                    </select>
+                </td>
+                <td>@x.UnitPrice BAM</td>
+                <td>@(x.Quantity * x.UnitPrice) BAM</td>
+                <td><a href="/Cart/RemoveFromCart?productid=@x.ProductID&userid=6">Ukloni iz korpe</a> </td>
+            </tr>
         }
-    </table>
+        </table>
+    </div>
 
     <br />
   <br />
@@ -78,24 +98,57 @@
 
 <script>
 
-    //ne valja nista
+    function Sett(id) {
         var quantity = document.getElementById(id).value;
-
-        field.addEventListener("keyup", function (event) {
-            if (event.keyCode === 13) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function () { };
-        request.open('POST', "/Cart/SetQuantity/?productid=" + id + "&userid=" + 6 + "&q=" + quantity);
-        request.send()
-        document.getElementById(id).value = 1;
-        document.getElementById("QuantityChangeMsg").style.display = "block";
-        setTimeout(function () {
-            document.getElementById("QuantityChangeMsg").style.display = "none";
-        }, 2500);
-
-        location.reload();
-            }
+        //alert(quantity);
+        //alert(id);
+        
+        //var request = new XMLHttpRequest();
+        //request.onreadystatechange = function () { };
+        //request.open('POST', "/Cart/SetQuantity/?productid=" + id + "&userid=" + 6 + "&q=" + quantity);
+        //request.send()
+        //location.reload()
+        $.ajax({
+                        url: '/Cart/SetQuantity',
+                        data: { productid: id,userid:6,q:quantity },
+                        type: "POST",
+                        
         });
+        
+        document.getElementById("QuantityChangeMsg").style.display = "block";
+        setTimeout(function() {
+            document.getElementById("QuantityChangeMsg").style.display = "none";
+        }, 3500);
+
+         //$( "#tabela" ).load(window.location.url + " #tabela" );
+        //$("#tabela").load("#tabela");
+
+
+    }
+
+
+
+
+
+
+    //ne valja nista
+        //var quantity = document.getElementById(id).value;
+
+        //field.addEventListener("keyup", function (event) {
+        //    if (event.keyCode === 13) {
+        //var request = new XMLHttpRequest();
+        //request.onreadystatechange = function () { };
+        //request.open('POST', "/Cart/SetQuantity/?productid=" + id + "&userid=" + 6 + "&q=" + quantity);
+        //request.send()
+        //document.getElementById(id).value = 1;
+        //document.getElementById("QuantityChangeMsg").style.display = "block";
+        //setTimeout(function () {
+        //    document.getElementById("QuantityChangeMsg").style.display = "none";
+        //}, 2500);
+
+        //location.reload();
+        //    }
+        //});
         //user,productid,quantity are sent
         
 

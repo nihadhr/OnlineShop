@@ -51,11 +51,12 @@ namespace OnlineShop.Controllers
             _cart.RemoveAllCartItems(userid);
             return Redirect("LookInCart");
         }
-
+        [HttpPost]
         public IActionResult SetQuantity(int productid,int userid,int q)
         {
-            
-            return Redirect("LookInCart");
+            _cart.ChangeQuantity(productid, userid, q);
+            //return Redirect("LookInCart");
+            return new EmptyResult();
         }
 
 

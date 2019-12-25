@@ -51,12 +51,25 @@ namespace OnlineShop.Controllers
             _cart.RemoveAllCartItems(userid);
             return Redirect("LookInCart");
         }
+        
         [HttpPost]
         public IActionResult SetQuantity(int productid,int userid,int q)
         {
             _cart.ChangeQuantity(productid, userid, q);
-            //return Redirect("LookInCart");
-            return new EmptyResult();
+            var listacart = _cart.GetAllCartItemsByUser(userid);
+            List<LookInCartVM> listavm = listacart
+            .Select(s => new LookInCartVM
+            {
+                ProductID = s.ProductID,
+                ProductNumber = _database.product.Find(s.ProductID).ProductNumber,
+                ProductName = _database.product.Find(s.ProductID).ProductName,
+                SubCategoryName = _database.subcategory.Find(_database.product.Find(s.ProductID).SubCategoryID).SubCategoryName,
+                UnitPrice = _database.product.Find(s.ProductID).UnitPrice,
+                Quantity = s.Quantity
+            }
+            ).ToList();
+            return View("LookInCart",listavm);
+            //return new EmptyResult();
         }
 
 

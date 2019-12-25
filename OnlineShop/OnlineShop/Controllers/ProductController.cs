@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.ViewModels;
 using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
+using X.PagedList;
+using X.PagedList.Mvc.Core;
+
 
 namespace OnlineShop.Controllers
 {
@@ -124,15 +127,21 @@ namespace OnlineShop.Controllers
             return View(data);
         }
 
-        public IActionResult ShowSubcategories(int ID)          // ID kategorije
+        public IActionResult ShowSubcategories(int id,string search,int? page)          // ID kategorije
         {
-            List<ShowSubCategoriesVM> lista = _database.subcategory.Where(s => s.CategoryID == ID).
+
+
+            var c = _database.subcategory.Where(s => s.CategoryID == id).
                 Select(s => new ShowSubCategoriesVM
-            {
-                CategoryName=_database.category.Where(c=>c.CategoryID==ID).SingleOrDefault().CategoryName,
-                SubCategoryID=s.SubCategoryID,
-                SubCategoryName=s.SubCategoryName
-            }).ToList();
+                {
+                 ID=id,
+                    CategoryName = s.Category.CategoryName,/* _database.category.Where(c => c.CategoryID == ID).SingleOrDefault().CategoryName*/
+                    SubCategoryID = s.SubCategoryID,
+                    SubCategoryName = s.SubCategoryName
+                }).Where(e => e.SubCategoryName.StartsWith(search) || search == null);
+
+
+            IPagedList<ShowSubCategoriesVM> lista = c.ToPagedList(page ?? 1, 6);
 
             return View(lista);
         }

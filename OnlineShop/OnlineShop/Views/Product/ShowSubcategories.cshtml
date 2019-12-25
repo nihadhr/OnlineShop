@@ -1,34 +1,57 @@
 ﻿@using OnlineShopPodaci.Model;
 @using OnlineShop.ViewModels;
 
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
 
-@model List<ShowSubCategoriesVM>
+
+@model IPagedList<OnlineShop.ViewModels.ShowSubCategoriesVM>
 
 @{
     ViewData["Title"] = "ShowSubcategories";
-
 }
 
 
-<h1>@Model.FirstOrDefault().CategoryName</h1>
+@*<h1>@Model.First().CategoryName</h1>*@
 <br />
 
 <style>
     #maindiv {
-        width: 23%;
+        width: 25%;
         float: left;
         margin: 10px;
-        padding:0px;
+        padding: 0px;
         border-radius: 5px;
+        height:230px;
     }
 
-    #maindiv:hover{
-        opacity:0.9;
+    #maindiv:hover {
+      opacity: 0.9;
+     }
+
+    #test {
+        width: 42%;
+        margin: auto;
+        margin-bottom: 15px;
+    }
+
+    .pagination-container {
+        margin-top: 550px;
         border:1px solid black;
     }
 
-
 </style>
+
+<div id="test">
+
+    @using (Html.BeginForm("ShowSubcategories", "Product", FormMethod.Get))
+    {
+        <input type="text" name="search" />
+        <input type="submit" value="Pretrazi" />
+    }
+</div>
+
+
 
 @foreach (var x in Model)
 {
@@ -38,15 +61,17 @@
             <div class="card-body">
                 <h4 class="card-title">
                     <a href="/Product/ShowProducts?ID=@x.SubCategoryID">@x.SubCategoryName</a>
+
                 </h4>
             </div>
         </div>
     </div>
 }
 
+<div id='Paging' style="text-align:center">
+    @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+    of @Model.PageCount*@
 
-
-
-
-
+    @Html.PagedListPager(Model, page => Url.Action("ShowSubCategories", new { page,Model[0].ID}))
+</div>
 

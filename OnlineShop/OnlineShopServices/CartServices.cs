@@ -48,6 +48,7 @@ namespace OnlineShopServices
 
         public List<Cart> GetAllCartItemsByUser(int userid)
         {
+           
             List<Cart> listacart = _database.cart.Where(u => u.UserID == userid).ToList();
             return listacart;
 

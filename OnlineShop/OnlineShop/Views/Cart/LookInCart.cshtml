@@ -7,7 +7,8 @@
 
 <style>
     #QuantityChangeMsg{
-        display: none;
+    /*display: none;*/ display:none;
+    transition: width 2s;
     position: fixed;
     top: 0;
     left: 0;
@@ -21,8 +22,15 @@
     opacity: 0.95;
     text-align:center;
     box-sizing:border-box;
-    border-radius:4px;
+    border-radius:0px 0px 5px 5px;
     }
+    #tabela{
+        border:solid black 0.5px;
+        padding:5px;
+    }
+    input[type=number]{
+    width: 50px;
+}
 </style>
 
 <html>
@@ -63,22 +71,21 @@
                     <td>@x.ProductName</td>
                     <td>@x.SubCategoryName</td>
                     <td>
-                        @*<input type="text" pattern="[0-10]" required min="0" id="@x.ProductID" value="@x.Quantity"/>*@
-
-                    <select id="@x.ProductID" onchange="Sett(@x.ProductID)">
+                    <input id="@x.ProductID" onchange="Sett(@x.ProductID)" type="number"  min="1" value="@x.Quantity" />
+                    @*<select id="@x.ProductID" onchange="Sett(@x.ProductID)">
                         @for (int i = 1; i <= 10; i++) //ovdje ce biti iz VM units in stock value za kraj for petlje
                         {
                             if (i == x.Quantity)
                             {
                                 <option selected value="@i">@i</option>
-}
+                            }
                             else
                             {
                                 <option value="@i">@i</option>
-}
-                        }
+                            }
+                        }  // nepotrebno
 
-                    </select>
+                    </select>*@
                 </td>
                 <td>@x.UnitPrice BAM</td>
                 <td>@(x.Quantity * x.UnitPrice) BAM</td>
@@ -100,25 +107,39 @@
 
     function Sett(id) {
         var quantity = document.getElementById(id).value;
-        //alert(quantity);
-        //alert(id);
         
         //var request = new XMLHttpRequest();
         //request.onreadystatechange = function () { };
         //request.open('POST', "/Cart/SetQuantity/?productid=" + id + "&userid=" + 6 + "&q=" + quantity);
         //request.send()
-        //location.reload()
+        //location.reloa d()
+        //-----------------------------------
         $.ajax({
-                        url: '/Cart/SetQuantity',
-                        data: { productid: id,userid:6,q:quantity },
-                        type: "POST",
+            url: '/Cart/SetQuantity',
+            data: { productid: id, userid: 6, q: quantity },
+            type: "POST",
+            success: function (PVresult) {
+                $("#tabela").html(PVresult);
+            }
+            });
                         
-        });
+        //});
+        //$.ajax({
+        //        url: "/Cart/LookInCartPV",
+        //        type: "GET",
+        //        data: { userid:6 }
+        //    })
+        //    .done(function (PVResult) {
+
+        //        $("#tabela").html(PVResult);
+        //    });
         
         document.getElementById("QuantityChangeMsg").style.display = "block";
-        setTimeout(function() {
-            document.getElementById("QuantityChangeMsg").style.display = "none";
+        setTimeout(function () {
+            document.getElementById("QuantityChangeMsg").style.visibility = "hidden";
         }, 3500);
+        //-------------------------------------------------
+
 
          //$( "#tabela" ).load(window.location.url + " #tabela" );
         //$("#tabela").load("#tabela");

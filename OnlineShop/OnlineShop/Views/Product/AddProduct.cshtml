@@ -6,53 +6,87 @@
     ViewData["Title"] = "Dodaj proizvod";
 }
 
-<h1>Dodaj ili izmjeni proizvod</h1>
-<br />
-<br />
+<style>
+    #addmanufacturer {
+        display: none;
+        width: 400px;
+        height: 350px;
+        border: solid black 2px;
+        border-radius: 4px;
+        
+        left: 50%;
+    transform: translate(-50%, 0);
+        z-index: 1000;
+        position:fixed;
+        }
+    #container{
+        position:relative;
+    }
+</style>
 
-<form asp-action="SaveProduct">
+<div id="addmanufacturer">
+        
 
-    <input asp-for="ProductID" value="@Model.ProductID" style="display:none" />
-
-
-    <p>Broj proizvoda</p>
-    <input type="text" asp-for="ProductNumber" value="@Model.ProductNumber" required />
+</div>
+<div id="container">
+    
+    <h1>Dodaj ili izmjeni proizvod</h1>
+    <br />
     <br />
 
-    <p>Podkategorija</p>
-    <select asp-for="SubCategoryID" asp-items="@Model.Subcategories" required>
-        <option>Odaberite podkategoriju proizvoda</option>
-    </select>
-    <br />
 
-    <p>Proizvodjac</p>
-    <select asp-for="ManufacturerID" asp-items="@Model.Manufacturers" required>
-        <option>Odaberite proizvodjaca</option>
-    </select>
-    <br />
+    <form asp-action="SaveProduct">
 
-    <a href="/Product/AddManufacturer?ProductID=@Model.ProductID">Dodaj novog proizvodjaca</a>
+        <input asp-for="ProductID" value="@Model.ProductID" style="display:none" />
 
-    <br />
-    <p>Naziv proizvoda</p>
-    <input type="text" asp-for="ProductName" value="@Model.ProductName" required />
-    <br />
 
-    <p>URL slike</p>
-    <input type="url" asp-for="ImageURL" value="@Model.ImageURL" />
-    <br />
+        <p>Broj proizvoda</p>
+        <input type="text" asp-for="ProductNumber" value="@Model.ProductNumber" required />
+        <br />
 
-    <p>Opis</p>
-    <input type="text" style="width:200px; height:150px;" asp-for="Description" value="@Model.Description" />
-    <br />
+        <p>Podkategorija</p>
+        <select asp-for="SubCategoryID" asp-items="@Model.Subcategories" required>
+            <option>Odaberite podkategoriju proizvoda</option>
+        </select>
+        <br />
 
-    <p>Cijena</p>
-    <input type="text" asp-for="UnitPrice" value="@Model.UnitPrice" required/>
-    <br /><br />
+        <p>Proizvodjac</p>
+        <select asp-for="ManufacturerID" asp-items="@Model.Manufacturers" required>
+            <option>Odaberite proizvodjaca</option>
+        </select>
+        <br />
 
-    <input type="submit" value="POTVRDI" />
-</form>
+        <a href="/Product/AddManufacturer?ProductID=@Model.ProductID">Dodaj novog proizvodjaca</a>
+        <button onclick="AddMf()">Dodaj proizvođača</button>
+
+        <br />
+        <p>Naziv proizvoda</p>
+        <input type="text" asp-for="ProductName" value="@Model.ProductName" required />
+        <br />
+
+        <p>URL slike</p>
+        <input type="url" asp-for="ImageURL" value="@Model.ImageURL" />
+        <br />
+
+        <p>Opis</p>
+        <input type="text" style="width:200px; height:150px;" asp-for="Description" value="@Model.Description" />
+        <br />
+
+        <p>Cijena</p>
+        <input type="text" asp-for="UnitPrice" value="@Model.UnitPrice" required />
+        <br /><br />
+
+        <input type="submit" value="POTVRDI" />
+    </form>
+</div>
 <script>
-   
+    function AddMf() {
+        //$("addmanufacturer").css("display", "block");
+        document.getElementById("addmanufacturer").style = "display:block";
+        document.getElementById("container").style = "filter:blur(5px)";
+    }
+
+</script>
+
 
 

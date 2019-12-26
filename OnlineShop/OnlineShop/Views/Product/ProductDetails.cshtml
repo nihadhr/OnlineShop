@@ -1,9 +1,12 @@
 ﻿@using OnlineShop.ViewModels
 
+@model ProductDetailsVM
 @{
     ViewData["Title"] = "ProductDetails";
+    //var photoPath = "~/images/" + (Model.Image);
+   
+
 }
-@model ProductDetailsVM
 
 
 <style>
@@ -60,10 +63,11 @@
 <div id="mainDiv">
     <div id="leftDiv">
         <div id="image">
+            <img src="~/images/@(Model.ImageUrl)" />
 
         </div>
-
-
+        @*<img src="/partners@(item.AdPath)" alt="" id="adimg"
+             title="@item.AdName" width:"50px" height="50px" />*@
     </div>
         <div id="rightDiv">
             <div id="title">
@@ -71,6 +75,8 @@
                 <h1>@Model.ProductName</h1>
                 <h4>Proizvođač : @Model.ManufacturerName</h4>
                 <p>Ime podkategorije : @Model.SubCategoryName</p>
+                
+                
             </div>
             <div id="rightContent">
                 ovdje detaljan opis

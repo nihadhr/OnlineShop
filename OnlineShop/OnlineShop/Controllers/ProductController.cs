@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +13,7 @@ using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
 using X.PagedList;
 using X.PagedList.Mvc.Core;
-
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShop.Controllers
 {
@@ -18,11 +21,14 @@ namespace OnlineShop.Controllers
     {
         private IProduct product;
         private OnlineShopContext _database;
+        private readonly IHostingEnvironment hosting;
 
-        public ProductController(IProduct p,OnlineShopContext b)
+
+        public ProductController(IProduct p, OnlineShopContext b, IHostingEnvironment hostingEnvironment)
         {
             product = p;
             _database = b;
+            hosting = hostingEnvironment;
         }
 
         public IActionResult Index()
@@ -53,6 +59,21 @@ namespace OnlineShop.Controllers
             return Redirect("/Product/Show");
         }
 
+        private string SaveFile(IFormFile file)
+        {
+            string uploadFileName = null;
+            string filePath = null;
+            if (file != null)
+            {
+                string uploadFoloder = Path.Combine(hosting.WebRootPath, "images");
+                uploadFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                filePath = Path.Combine(uploadFoloder, uploadFileName);
+                file.CopyTo(new FileStream(filePath, FileMode.Create));
+                return "~/images/" + uploadFileName;
+            }
+            return null;
+        }
+
         public IActionResult AddProduct(int ProductID)
         {
             Product temp;
@@ -60,7 +81,8 @@ namespace OnlineShop.Controllers
                 temp= _database.product.Find(ProductID);
             else
                 temp= new Product();
-            var data = new AddOrUpdateProductVM {
+            var data = new AddOrUpdateProductVM
+            {
                 ProductID=temp.ProductID,
                 ProductNumber=temp.ProductNumber,
                 SubCategoryID=temp.SubCategoryID,
@@ -68,8 +90,8 @@ namespace OnlineShop.Controllers
                 ManufacturerID = temp.ManufacturerID,
                 Manufacturers = _database.manufacturer.Select(s => new SelectListItem { Value = s.ManufacturerID.ToString(), Text = s.ManufacturerName }).ToList(),
                 ProductName=temp.ProductName,
-                ImageURL=temp.ImageUrl,
-                Description=temp.Description,
+                //Image = temp.ImageUrl,
+                Description =temp.Description,
                 UnitPrice=temp.UnitPrice
             };
             return View(data);
@@ -77,28 +99,38 @@ namespace OnlineShop.Controllers
 
         public IActionResult SaveProduct(AddOrUpdateProductVM model)
         {
-            Product neki;
-
-            if ( model.ProductID== 0)
+            if (ModelState.IsValid)
             {
-                neki = new Product();
-                _database.product.Add(neki);
+                string uniquefileName = null;
+                if (model.Image != null)
+                {
+                    string uploadsFolder = Path.Combine(hosting.WebRootPath, "images");
+                    uniquefileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniquefileName);
+                    model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
+
+                Product neki;
+                if (model.ProductID == 0)
+                {
+                    neki = new Product();
+                    _database.product.Add(neki);
+                }
+                else
+                    neki = _database.product.Find(model.ProductID);
+
+                neki.ProductNumber = model.ProductNumber;
+                neki.SubCategoryID = model.SubCategoryID;
+                neki.ManufacturerID = model.ManufacturerID;
+                neki.ProductName = model.ProductName;
+                neki.ImageUrl = uniquefileName;                  
+                neki.Description = model.Description;
+                neki.UnitPrice = model.UnitPrice;
+
+                product.AddProduct(neki);
             }
-            else
-                neki = _database.product.Find(model.ProductID);
-            
-
-            neki.ProductNumber = model.ProductNumber;
-            neki.SubCategoryID = model.SubCategoryID;
-            neki.ManufacturerID = model.ManufacturerID;
-            neki.ProductName = model.ProductName;
-            neki.ImageUrl = model.ImageURL;
-            neki.Description = model.Description;
-            neki.UnitPrice = model.UnitPrice;
-
             _database.SaveChanges();
             return Redirect("/Product/Show");
-
         }
 
         public IActionResult AddManufacturer(int ProductID)
@@ -129,17 +161,14 @@ namespace OnlineShop.Controllers
 
         public IActionResult ShowSubcategories(int id,string search,int? page)          // ID kategorije
         {
-
-
             var c = _database.subcategory.Where(s => s.CategoryID == id).
                 Select(s => new ShowSubCategoriesVM
                 {
                  ID=id,
-                    CategoryName = s.Category.CategoryName,/* _database.category.Where(c => c.CategoryID == ID).SingleOrDefault().CategoryName*/
+                    CategoryName = s.Category.CategoryName,
                     SubCategoryID = s.SubCategoryID,
                     SubCategoryName = s.SubCategoryName
                 }).Where(e => e.SubCategoryName.StartsWith(search) || search == null);
-
 
             IPagedList<ShowSubCategoriesVM> lista = c.ToPagedList(page ?? 1, 6);
 

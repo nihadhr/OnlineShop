@@ -27,6 +27,10 @@ namespace OnlineShop.Controllers
 
         public IActionResult LookInCart(int userid = 6)
         {
+            return View();
+        }
+        public IActionResult GetCartItems(int userid = 6)
+        {
             var listacart = _cart.GetAllCartItemsByUser(userid);
             List<LookInCartVM> listavm = listacart
             .Select(s => new LookInCartVM
@@ -39,20 +43,23 @@ namespace OnlineShop.Controllers
                 Quantity = s.Quantity
             }
             ).ToList();
-            return View(listavm);
+            return PartialView(listavm);
         }
+      
+
+
         public IActionResult RemoveFromCart(int productid, int userid)
         {
             _cart.RemoveCartItem(productid, userid);
-            return Redirect("LookInCart");
+            return Redirect("/Cart/GetCartItems?userid="+userid);
         }
         public IActionResult DeleteCart(int userid)
         {
             _cart.RemoveAllCartItems(userid);
-            return Redirect("LookInCart");
+            return Redirect("GetCartItems?userid=" + userid);
         }
         
-        [HttpPost]
+        [HttpGet]
         public IActionResult SetQuantity(int productid,int userid,int q)
         {
             _cart.ChangeQuantity(productid, userid, q);
@@ -68,8 +75,8 @@ namespace OnlineShop.Controllers
                 Quantity = s.Quantity
             }
             ).ToList();
-            return View("LookInCart",listavm);
-            //return new EmptyResult();
+            return PartialView("GetCartItems",listavm);
+
         }
 
 

@@ -53,7 +53,7 @@ namespace OnlineShopPodaci
                 .HasKey(c => new { c.ProductID, c.UserID });
 
             modelBuilder.Entity<OrderDetails>()
-                .HasKey(c => new { c.ProductID, c.UserID,c.OrderID });
+                .HasKey(c => new { c.ProductID,c.OrderID });
 
 
             modelBuilder.Entity<BranchProduct>().HasKey(e => new { e.BranchID, e.ProductID });

@@ -30,6 +30,7 @@ namespace OnlineShop
 
             services.AddScoped<IProduct, ProductServices>();
             services.AddScoped<ICart, CartServices>();
+            services.AddScoped<IOrder, OrderServices>();
             services.AddDbContext<OnlineShopContext>(c => c.UseSqlServer(Configuration.GetConnectionString("OnlineShopCS")));
         }
 

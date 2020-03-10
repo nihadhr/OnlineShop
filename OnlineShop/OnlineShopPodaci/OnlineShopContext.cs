@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OnlineShopPodaci.Model;
 using System;
 using System.Collections.Generic;
@@ -6,9 +8,9 @@ using System.Text;
 
 namespace OnlineShopPodaci
 {
-    public class OnlineShopContext:DbContext
+    public class OnlineShopContext:IdentityDbContext<User,Role,int>
     {
-        public OnlineShopContext(DbContextOptions opcije):base(opcije){
+        public OnlineShopContext(DbContextOptions<OnlineShopContext> opcije):base(opcije){
         
         }
         public OnlineShopContext()
@@ -32,6 +34,7 @@ namespace OnlineShopPodaci
         public DbSet<StockProduct> stockproduct { get; set; }
         public DbSet<BranchProduct> branchproduct { get; set; }
         public DbSet<Branch> branch { get; set; }
+        public DbSet<Role> role { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,16 +52,25 @@ namespace OnlineShopPodaci
             //    .HasForeignKey(cd => cd.CartID);
 
             //fluent api for composite keys
+
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Ignore<IdentityUserLogin<string>>();
+            modelBuilder.Ignore<IdentityUserRole<string>>();
+            modelBuilder.Ignore<IdentityUserClaim<string>>();
+            modelBuilder.Ignore<IdentityUserToken<string>>();
+            modelBuilder.Ignore<IdentityUser<string>>();
+
             modelBuilder.Entity<Cart>()
                 .HasKey(c => new { c.ProductID, c.UserID });
 
             modelBuilder.Entity<OrderDetails>()
                 .HasKey(c => new { c.ProductID,c.OrderID });
 
-
             modelBuilder.Entity<BranchProduct>().HasKey(e => new { e.BranchID, e.ProductID });
 
             modelBuilder.Entity<StockProduct>().HasKey(o => new { o.ProductID, o.StockID });
+
+
 
         }
 

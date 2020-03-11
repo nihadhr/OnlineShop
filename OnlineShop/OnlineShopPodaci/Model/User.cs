@@ -19,8 +19,6 @@ namespace OnlineShopPodaci.Model
 
         public string Adress { get; set; }
         public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
 
         [ForeignKey("Gender")]
         public int GenderID { get; set; }

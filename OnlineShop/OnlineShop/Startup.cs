@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OnlineShopPodaci;
+using OnlineShopPodaci.Model;
 using OnlineShopServices;
 
 namespace OnlineShop
@@ -28,6 +29,12 @@ namespace OnlineShop
         {
             services.AddControllersWithViews();
 
+            services.AddIdentity<User, Role>(options =>
+             {
+                 options.User.RequireUniqueEmail = true;
+             }).AddEntityFrameworkStores<OnlineShopContext>();
+            
+            
             services.AddScoped<IProduct, ProductServices>();
             services.AddScoped<ICart, CartServices>();
             services.AddScoped<IOrder, OrderServices>();
@@ -52,6 +59,8 @@ namespace OnlineShop
 
             app.UseRouting();
 
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

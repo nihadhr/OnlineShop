@@ -219,7 +219,7 @@ namespace OnlineShop.Controllers
             _database.SaveChanges();
             var stock = _database.stockproduct.Where(e => e.ProductID == model.productID).FirstOrDefault();
 
-            stock.Quantity =stock.Quantity - sum;         // od skladisne kolicine oduzmemo sto je rasporedjeno 
+            stock.Quantity =stock.Quantity - sum;         
             _database.SaveChanges();
             return Redirect("/Product/ShowStock");
         }

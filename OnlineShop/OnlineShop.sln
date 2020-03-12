@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop", "OnlineShop\On
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShopPodaci", "OnlineShopPodaci\OnlineShopPodaci.csproj", "{3D87C306-AF25-4FDC-8574-65762478943A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShopServices", "OnlineShopServices\OnlineShopServices.csproj", "{1A2968B7-C77B-4012-BE7B-85C001D5EE75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShopServices", "OnlineShopServices\OnlineShopServices.csproj", "{1A2968B7-C77B-4012-BE7B-85C001D5EE75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

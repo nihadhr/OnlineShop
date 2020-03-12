@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace OnlineShopPodaci.Model
@@ -12,7 +13,7 @@ namespace OnlineShopPodaci.Model
         public int ProductID { get; set; }
         public Product Product { get; set; }
 
-        public int UnitsInBranch { get; set; }
+        public int? UnitsInBranch { get; set; }
 
     }
 }

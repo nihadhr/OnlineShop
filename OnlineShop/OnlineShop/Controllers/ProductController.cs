@@ -2,31 +2,29 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using OnlineShop.ViewModels;
 using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
 using X.PagedList;
-using X.PagedList.Mvc.Core;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShop.Controllers
 {
     public class ProductController : Controller
     {
-        private IProduct product;
+        private IProduct Iproduct;
+
+
         private OnlineShopContext _database;
         private readonly IHostingEnvironment hosting;
 
 
         public ProductController(IProduct p, OnlineShopContext b, IHostingEnvironment hostingEnvironment)
         {
-            product = p;
+            Iproduct = p;
             _database = b;
             hosting = hostingEnvironment;
         }
@@ -37,7 +35,7 @@ namespace OnlineShop.Controllers
         }
         public IActionResult Show()
         {
-            var proizvodi = product.GetAllProducts();
+            var proizvodi = Iproduct.GetAllProducts();
             var productForView = proizvodi.Select(p => new ShowProductForManage
             {
                 ProductID = p.ProductID,
@@ -55,7 +53,7 @@ namespace OnlineShop.Controllers
 
         public IActionResult Delete(int ID)
         {
-            product.RemoveProduct(ID);
+            Iproduct.RemoveProduct(ID);
             return Redirect("/Product/Show");
         }
 
@@ -83,16 +81,17 @@ namespace OnlineShop.Controllers
                 temp= new Product();
             var data = new AddOrUpdateProductVM
             {
-                ProductID=temp.ProductID,
-                ProductNumber=temp.ProductNumber,
-                SubCategoryID=temp.SubCategoryID,
-                Subcategories=_database.subcategory.Select(s=> new SelectListItem { Value = s.SubCategoryID.ToString(), Text = s.SubCategoryName }).ToList(),
+                ProductID = temp.ProductID,
+                ProductNumber = temp.ProductNumber,
+                SubCategoryID = temp.SubCategoryID,
+                Subcategories = _database.subcategory.Select(s => new SelectListItem { Value = s.SubCategoryID.ToString(), Text = s.SubCategoryName }).ToList(),
                 ManufacturerID = temp.ManufacturerID,
                 Manufacturers = _database.manufacturer.Select(s => new SelectListItem { Value = s.ManufacturerID.ToString(), Text = s.ManufacturerName }).ToList(),
-                ProductName=temp.ProductName,
+                ProductName = temp.ProductName,
                 //Image = temp.ImageUrl,
-                Description =temp.Description,
-                UnitPrice=temp.UnitPrice
+                Description = temp.Description,
+                UnitPrice = temp.UnitPrice,
+                UnitsInStock = temp.UnitsInStock
             };
             return View(data);
         }
@@ -121,17 +120,110 @@ namespace OnlineShop.Controllers
 
                 neki.ProductNumber = model.ProductNumber;
                 neki.SubCategoryID = model.SubCategoryID;
-                neki.ManufacturerID = model.ManufacturerID;
+                neki.ManufacturerID = model.ManufacturerID;     
                 neki.ProductName = model.ProductName;
                 neki.ImageUrl = uniquefileName;                  
                 neki.Description = model.Description;
                 neki.UnitPrice = model.UnitPrice;
+                neki.UnitsInStock = model.UnitsInStock;
 
-                product.AddProduct(neki);
+                Iproduct.AddProduct(neki);
+
+                _database.SaveChanges();        // da bi proizvod dobio svoj id ! 
+
+                    var st_pr = new StockProduct            // medjutabela
+                    {
+                        StockID = 5,                  // jer je samo 1 skladiste
+                        ProductID = neki.ProductID,
+                        Quantity = neki.UnitsInStock
+                    };
+                    _database.Add(st_pr);
             }
             _database.SaveChanges();
             return Redirect("/Product/Show");
         }
+
+        public IActionResult ShowStock()
+        {
+            var products = Iproduct.GetAllProducts();
+
+            var model = new ShowProductsInStockVM
+            {
+                _lista = products.Select(e => new ShowProductsInStockVM.rows
+                {
+                    ProductID=e.ProductID,
+                    ProductName=e.ProductName,
+                    Price=e.UnitPrice,
+                    Quantity=_database.stockproduct.Where(a=>a.ProductID==e.ProductID).Select(a=>a.Quantity).FirstOrDefault()
+                }).ToList()
+            };
+            return View(model);
+        }
+
+        public IActionResult DistributeProduct(int productID)
+        {
+            var product = Iproduct.GetProductByID(productID);
+
+            var model = new DistributeProductVM
+            {
+                productID = product.ProductID,
+                productName = product.ProductName,
+                price = product.UnitPrice,
+                manufacturer = product.Manufacturer.ManufacturerName,
+                unitsInStock = product.UnitsInStock,
+                category = product.SubCategory.Category.CategoryName,
+                subcategory = product.SubCategory.SubCategoryName,
+
+                _list=_database.branch.Select(e=> new rows
+                {
+                    branchID=e.BranchID,
+                    cityname=e.City.CityName,
+                    quntityPerBranch=_database.branchproduct.Where(a=>a.BranchID==e.BranchID).Select(a=>a.UnitsInBranch).FirstOrDefault()??0      
+                }).ToList(),
+
+                _stock=_database.stock.Select(e=>new rows2
+                {
+                    stockID=e.StockID,
+                    stockName=e.StockName,
+                    stockQuanttity=_database.stockproduct.Where(a=>a.StockID==e.StockID && product.ProductID==a.ProductID).Select(a=>a.Quantity).FirstOrDefault()
+                }).ToList()
+            };
+            return View(model);
+        }
+
+        public IActionResult SaveBranchProduct(DistributeProductVM model)
+        {
+            var product = Iproduct.GetProductByID(model.productID);
+            var sum = 0;
+            // za svaku prodavnicu rasporedjujemo proizvode
+
+            foreach (var i in model._list)
+            {
+                var bp = _database.branchproduct.Where(e => e.BranchID == i.branchID).FirstOrDefault();
+                if (model.productID == bp.ProductID)
+                {
+                    bp.UnitsInBranch += i.quntityPerBranch;
+                }
+                else
+                {
+                    var testing = new BranchProduct
+                    {
+                        BranchID = i.branchID,
+                        ProductID = product.ProductID,
+                        UnitsInBranch = i.quntityPerBranch,
+                    };
+                _database.Add(testing);
+                }
+                sum = sum + i.quntityPerBranch;        // sabiraju se kolicine po prodavnicama
+            }
+            _database.SaveChanges();
+            var stock = _database.stockproduct.Where(e => e.ProductID == model.productID).FirstOrDefault();
+
+            stock.Quantity =stock.Quantity - sum;         // od skladisne kolicine oduzmemo sto je rasporedjeno 
+            _database.SaveChanges();
+            return Redirect("/Product/ShowStock");
+        }
+
 
         public IActionResult AddManufacturer(int ProductID)
         {
@@ -152,6 +244,7 @@ namespace OnlineShop.Controllers
             return Redirect($"/Product/AddProduct?={ProductID}");
 
         }
+
         public IActionResult Show2()       
         {
            List<ShowCategoriesVM >data = _database.category.Select(c => new ShowCategoriesVM { CategoryID = c.CategoryID, CategoryName = c.CategoryName }).ToList();

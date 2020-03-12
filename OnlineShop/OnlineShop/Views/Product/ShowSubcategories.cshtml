@@ -22,12 +22,12 @@
         margin: 10px;
         padding: 0px;
         border-radius: 5px;
-        height:230px;
+        height: 230px;
     }
 
-    #maindiv:hover {
-      opacity: 0.9;
-     }
+        #maindiv:hover {
+            opacity: 0.9;
+        }
 
     #test {
         width: 42%;
@@ -37,9 +37,8 @@
 
     .pagination-container {
         margin-top: 550px;
-        border:1px solid black;
+        border: 1px solid black;
     }
-
 </style>
 
 <div id="test">
@@ -55,23 +54,25 @@
 
 @foreach (var x in Model)
 {
+    <a href="/Product/ShowProducts?ID=@x.SubCategoryID">
+
     <div id="maindiv" class="col-lg-3 col-md-4 col-sm-6 mb-4">
         <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+            <img class="card-img-top" src="http://placehold.it/700x400" alt="">
             <div class="card-body">
                 <h4 class="card-title">
-                    <a href="/Product/ShowProducts?ID=@x.SubCategoryID">@x.SubCategoryName</a>
-
+                    <p>@x.SubCategoryName</p>
                 </h4>
             </div>
         </div>
     </div>
+    </a>
 }
 
 <div id='Paging' style="text-align:center">
     @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-    of @Model.PageCount*@
+        of @Model.PageCount*@
 
-    @Html.PagedListPager(Model, page => Url.Action("ShowSubCategories", new { page,Model[0].ID}))
+    @Html.PagedListPager(Model, page => Url.Action("ShowSubCategories", new { page, Model[0].ID }))
 </div>
 

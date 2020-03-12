@@ -10,21 +10,21 @@ namespace OnlineShopServices
 {
     public class ProductServices:IProduct
     {
-        private OnlineShopContext baza;
+        private OnlineShopContext _context;
         public ProductServices(OnlineShopContext b)
         {
-            baza = b;
+            _context = b;
         }
 
         public void AddProduct(Product p)
         {
-            baza.Add(p);
-            baza.SaveChanges();
+            _context.Add(p);
+            _context.SaveChanges();
         }
 
         public List<Product> GetAllProducts()
         {
-            return baza.product.Include(p => p.SubCategory).Include(p => p.Manufacturer).ToList();
+            return _context.product.Include(p => p.SubCategory).Include(p => p.Manufacturer).Include(e=>e.SubCategory.Category). ToList();
         }
         public Product GetProductByID(int id)
         {
@@ -33,9 +33,10 @@ namespace OnlineShopServices
 
         public void RemoveProduct(int id)
         {
-            baza.Remove(GetProductByID(id));
-            baza.SaveChanges();
+            _context.Remove(GetProductByID(id));
+            _context.SaveChanges();
         }
+
 
     }
 }

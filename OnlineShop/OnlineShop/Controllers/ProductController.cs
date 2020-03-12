@@ -17,7 +17,6 @@ namespace OnlineShop.Controllers
     {
         private IProduct Iproduct;
 
-
         private OnlineShopContext _database;
         private readonly IHostingEnvironment hosting;
 
@@ -143,6 +142,86 @@ namespace OnlineShop.Controllers
             return Redirect("/Product/Show");
         }
 
+        public IActionResult AddManufacturer(int ProductID)
+        {
+            ViewData["idP"] =ProductID;
+            return View("AddManufacturer");
+        }
+
+        public IActionResult SaveManufacturer(string manufacturerName, string logoURL,int ProductID)
+        {
+            Manufacturer manufacturer = new Manufacturer
+            {
+                ManufacturerName = manufacturerName,
+                LogoUrl = logoURL
+            };
+
+            _database.manufacturer.Add(manufacturer);
+            _database.SaveChanges();
+            return Redirect($"/Product/AddProduct?={ProductID}");
+
+        }
+
+        public IActionResult Show2()       
+        {
+           List<ShowCategoriesVM >data = _database.category.Select(c => new ShowCategoriesVM { CategoryID = c.CategoryID, CategoryName = c.CategoryName }).ToList();
+            
+            return View(data);
+        }
+
+        public IActionResult ShowSubcategories(int id,string search,int? page)          // ID kategorije
+        {
+            var c = _database.subcategory.Where(s => s.CategoryID == id).
+                Select(s => new ShowSubCategoriesVM
+                {
+                 ID=id,
+                    CategoryName = s.Category.CategoryName,
+                    SubCategoryID = s.SubCategoryID,
+                    SubCategoryName = s.SubCategoryName
+                }).Where(e => e.SubCategoryName.StartsWith(search) || search == null);
+
+            IPagedList<ShowSubCategoriesVM> lista = c.ToPagedList(page ?? 1, 6);
+
+            return View(lista);
+        }
+
+        public IActionResult ShowProducts(int ID)       // ID podkategorije 
+        {
+
+            List<ShowProductsVM> products = _database.product.Where(s => s.SubCategoryID == ID).
+                Select(p => new ShowProductsVM
+            {
+                ProductID=p.ProductID,
+                ProductName=p.ProductName,
+                ManufacturerName=p.Manufacturer.ManufacturerName,
+                UnitPrice=p.UnitPrice,
+                UnitsInStock=p.UnitsInStock
+
+            }).ToList();
+
+            return View(products);
+        }
+
+        public IActionResult ProductDetails(int ID)     // ID proizvoda
+        {
+            ProductDetailsVM model = _database.product.Where(s=>s.ProductID==ID).Select(a => new ProductDetailsVM
+            {
+                ProductID =a.ProductID,
+                ProductName=a.ProductName,
+                ProductNumber =a.ProductNumber,
+                SubCategoryName=a.SubCategory.SubCategoryName,
+                ManufacturerName=a.Manufacturer.ManufacturerName,
+                ImageUrl=a.ImageUrl,
+                Description=a.Description,
+                UnitPrice=a.UnitPrice,
+                UnitsInStock=a.UnitsInStock         
+            }).SingleOrDefault();
+
+            return View(model);
+        }
+
+
+
         public IActionResult ShowStock()
         {
             var products = Iproduct.GetAllProducts();
@@ -224,83 +303,5 @@ namespace OnlineShop.Controllers
             return Redirect("/Product/ShowStock");
         }
 
-
-        public IActionResult AddManufacturer(int ProductID)
-        {
-            ViewData["idP"] =ProductID;
-            return View("AddManufacturer");
-        }
-
-        public IActionResult SaveManufacturer(string manufacturerName, string logoURL,int ProductID)
-        {
-            Manufacturer manufacturer = new Manufacturer
-            {
-                ManufacturerName = manufacturerName,
-                LogoUrl = logoURL
-            };
-
-            _database.manufacturer.Add(manufacturer);
-            _database.SaveChanges();
-            return Redirect($"/Product/AddProduct?={ProductID}");
-
-        }
-
-        public IActionResult Show2()       
-        {
-           List<ShowCategoriesVM >data = _database.category.Select(c => new ShowCategoriesVM { CategoryID = c.CategoryID, CategoryName = c.CategoryName }).ToList();
-            
-            return View(data);
-        }
-
-        public IActionResult ShowSubcategories(int id,string search,int? page)          // ID kategorije
-        {
-            var c = _database.subcategory.Where(s => s.CategoryID == id).
-                Select(s => new ShowSubCategoriesVM
-                {
-                 ID=id,
-                    CategoryName = s.Category.CategoryName,
-                    SubCategoryID = s.SubCategoryID,
-                    SubCategoryName = s.SubCategoryName
-                }).Where(e => e.SubCategoryName.StartsWith(search) || search == null);
-
-            IPagedList<ShowSubCategoriesVM> lista = c.ToPagedList(page ?? 1, 6);
-
-            return View(lista);
-        }
-
-        public IActionResult ShowProducts(int ID)       // ID podkategorije 
-        {
-
-            List<ShowProductsVM> products = _database.product.Where(s => s.SubCategoryID == ID).
-                Select(p => new ShowProductsVM
-            {
-                ProductID=p.ProductID,
-                ProductName=p.ProductName,
-                ManufacturerName=p.Manufacturer.ManufacturerName,
-                UnitPrice=p.UnitPrice,
-                UnitsInStock=p.UnitsInStock
-
-            }).ToList();
-
-            return View(products);
-        }
-
-        public IActionResult ProductDetails(int ID)     // ID proizvoda
-        {
-            ProductDetailsVM model = _database.product.Where(s=>s.ProductID==ID).Select(a => new ProductDetailsVM
-            {
-                ProductID =a.ProductID,
-                ProductName=a.ProductName,
-                ProductNumber =a.ProductNumber,
-                SubCategoryName=a.SubCategory.SubCategoryName,
-                ManufacturerName=a.Manufacturer.ManufacturerName,
-                ImageUrl=a.ImageUrl,
-                Description=a.Description,
-                UnitPrice=a.UnitPrice,
-                UnitsInStock=a.UnitsInStock         // uvijek je 0 tamo
-            }).SingleOrDefault();
-
-            return View(model);
-        }
     }
 }

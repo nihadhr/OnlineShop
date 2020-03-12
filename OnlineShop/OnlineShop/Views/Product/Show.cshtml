@@ -29,9 +29,6 @@
             <td>@p.Description</td>
             <td>@p.UnitPrice</td>
             <td>
-                <a class="btn btn-danger" href="/Product/Delete?ID=@p.ProductID">Obrisi</a>
-            </td>
-            <td>
                 <a class="btn btn-warning" href="/Product/AddProduct?ProductID=@p.ProductID">Izmjeni</a>
             </td>
         </tr>
@@ -43,3 +40,5 @@
 <br /><br />
 <a class="btn btn-primary" href="/Product/ShowStock">Skladiste</a>
 
+<br /><br />
+<a class="btn btn-info" href="/Branch/ShowAllBranches">Prikaz poslovnica</a>

@@ -45,6 +45,14 @@
         color:black;
     }
 
+
+    a:hover{
+        
+        text-decoration:none;
+        color:red;
+    }
+
+
 </style>
 
 
@@ -58,24 +66,28 @@
 
 @foreach (var i in Model)
 {
-    <a href="/Product/ProductDetails?ID=@i.ProductID">
 
-    <div id="maindiv" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+    <div id="maindiv"  class="col-lg-3 col-md-4 col-sm-6 mb-4">
         <div class="card h-100">
-            <img class="card-img-top" src="http://placehold.it/700x400" alt="">
+            <a href="/Product/ProductDetails?ID=@i.ProductID">
+
+                <img class="card-img-top" src="http://placehold.it/700x400" alt="">
+            </a>
             <div class="card-body">
-                <h4 class="card-title">
-                    <p>@i.ProductName</p>
-                </h4>
-                <p  class="card-text">Cijena : @i.UnitPrice   KM</p>
-                <p class="card-text">Proizvođač : @i.ManufacturerName</p>
-                <input type="number" id="@i.ProductID" value="1" min="1" />
-                <br><br />
-                <button onclick="AddToCart(@i.ProductID)">Dodaj u košaricu</button>
+                <a id="title" href="/Product/ProductDetails?ID=@i.ProductID">
+
+                    <h4 class="card-title">
+                        @i.ProductName
+                    </h4>
+                </a>
+                    <p class="card-text">Cijena : @i.UnitPrice   KM</p>
+                    <p class="card-text">Proizvođač : @i.ManufacturerName</p>
+                    <input type="number" id="@i.ProductID" value="1" min="1" />
+                    <br><br />
+                    <button class="btn btn-primary" onclick="AddToCart(@i.ProductID)">Dodaj u košaricu</button>
             </div>
         </div>
     </div>
-    </a>
 }
 
 <script>

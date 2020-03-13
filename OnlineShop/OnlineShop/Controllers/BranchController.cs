@@ -119,20 +119,5 @@ namespace OnlineShop.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

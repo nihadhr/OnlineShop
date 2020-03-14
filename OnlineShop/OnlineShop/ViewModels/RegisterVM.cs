@@ -15,7 +15,7 @@ namespace OnlineShop.ViewModels
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Unesite lozinku")]
+        [Display(Name = "Lozinku")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]

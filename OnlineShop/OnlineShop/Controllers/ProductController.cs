@@ -132,7 +132,7 @@ namespace OnlineShop.Controllers
 
                     var st_pr = new StockProduct            // medjutabela
                     {
-                        StockID = 5,                  // jer je samo 1 skladiste
+                        StockID = 1,                  // jer je samo 1 skladiste
                         ProductID = neki.ProductID,
                         Quantity = neki.UnitsInStock
                     };
@@ -177,7 +177,8 @@ namespace OnlineShop.Controllers
                  ID=id,
                     CategoryName = s.Category.CategoryName,
                     SubCategoryID = s.SubCategoryID,
-                    SubCategoryName = s.SubCategoryName
+                    SubCategoryName = s.SubCategoryName,
+                    imageurl=s.ImageUrl
                 }).Where(e => e.SubCategoryName.StartsWith(search) || search == null);
 
             IPagedList<ShowSubCategoriesVM> lista = c.ToPagedList(page ?? 1, 6);
@@ -187,17 +188,16 @@ namespace OnlineShop.Controllers
 
         public IActionResult ShowProducts(int ID)       // ID podkategorije 
         {
-
             List<ShowProductsVM> products = _database.product.Where(s => s.SubCategoryID == ID).
                 Select(p => new ShowProductsVM
-            {
-                ProductID=p.ProductID,
-                ProductName=p.ProductName,
-                ManufacturerName=p.Manufacturer.ManufacturerName,
-                UnitPrice=p.UnitPrice,
-                UnitsInStock=p.UnitsInStock
-
-            }).ToList();
+                {
+                    productID = p.ProductID,
+                    productName = p.ProductName,
+                    manufacturerName = p.Manufacturer.ManufacturerName,
+                    unitPrice = p.UnitPrice,
+                    unitsInStock = p.UnitsInStock,
+                    imageUrl = p.ImageUrl
+                }).ToList();
 
             return View(products);
         }

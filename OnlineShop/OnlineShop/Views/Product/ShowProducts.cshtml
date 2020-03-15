@@ -15,7 +15,7 @@
         width: 25%;
         float: left;
         margin: 5px;
-        height: 400px;
+        height: 450px;
         padding: 0px;
     }
 
@@ -52,6 +52,20 @@
     }
 
 
+    #imagediv{
+        width:100%;
+        height:212px;
+        background-color:palegreen;
+        display: flex;
+    }
+
+    img{
+        width:auto;
+        height:auto;
+
+    }
+
+
 </style>
 
 
@@ -63,27 +77,32 @@
 <br />
 
 
-@foreach (var i in Model)
+@foreach (var o in Model)
 {
 
     <div id="maindiv"  class="col-lg-3 col-md-4 col-sm-6 mb-4">
         <div class="card h-100">
-            <a href="/Product/ProductDetails?ID=@i.ProductID">
+            
+            <div id="imagediv">
+                
+                <a href="/Product/ProductDetails?ID=@o.productID">
+                
+                    <img src="~/images/@o.imageUrl" alt="">
+                </a>
+            </div>
 
-                <img class="card-img-top" src="http://placehold.it/700x400" alt="">
-            </a>
             <div  class="card-body">
-                <a style="color:blue" id="title" href="/Product/ProductDetails?ID=@i.ProductID">
+                <a style="color:blue" id="title" href="/Product/ProductDetails?ID=@o.productID">
 
                     <h4  class="card-title">
-                        @i.ProductName
+                        @o.productName
                     </h4>
                 </a>
-                    <p class="card-text">Cijena : @i.UnitPrice   KM</p>
-                    <p class="card-text">Proizvođač : @i.ManufacturerName</p>
-                    <input type="number" id="@i.ProductID" value="1" min="1" />
+                    <p class="card-text">Cijena : @o.unitPrice   KM</p>
+                    <p class="card-text">Proizvođač : @o.manufacturerName</p>
+                    <input type="number" id="@o.productID" value="1" min="1" />
                     <br><br />
-                    <button class="btn btn-primary" onclick="AddToCart(@i.ProductID)">Dodaj u košaricu</button>
+                    <button class="btn btn-primary" onclick="AddToCart(@o.productID)">Dodaj u košaricu</button>
             </div>
         </div>
     </div>

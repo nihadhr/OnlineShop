@@ -13,6 +13,7 @@ namespace OnlineShop.ViewModels
         public string CategoryName { get; set; }
         public int SubCategoryID { get; set; }
         public string  SubCategoryName { get; set; }
+        public string imageurl { get; set; }
 
     }
 }

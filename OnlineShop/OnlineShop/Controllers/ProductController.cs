@@ -198,7 +198,7 @@ namespace OnlineShop.Controllers
                     unitsInStock = p.UnitsInStock,
                     imageUrl = p.ImageUrl
                 }).ToList();
-
+            
             return View(products);
         }
 

@@ -46,7 +46,6 @@ namespace OnlineShop.Controllers
                 UnitPrice = p.UnitPrice
             });
             var data = new SohwProductForManageLIST { ListOfProducts = productForView };
-
             return View(data);
         }
 
@@ -70,7 +69,7 @@ namespace OnlineShop.Controllers
             }
             return null;
         }
-
+        
         public IActionResult AddProduct(int ProductID)
         {
             Product temp;
@@ -219,7 +218,6 @@ namespace OnlineShop.Controllers
 
             return View(model);
         }
-
 
 
         public IActionResult ShowStock()

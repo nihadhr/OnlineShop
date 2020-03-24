@@ -10,7 +10,7 @@ namespace OnlineShopServices
 {
     public class ProductServices:IProduct
     {
-        private OnlineShopContext _context;
+        private readonly OnlineShopContext _context;
         public ProductServices(OnlineShopContext b)
         {
             _context = b;

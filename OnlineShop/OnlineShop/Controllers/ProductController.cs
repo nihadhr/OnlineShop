@@ -15,11 +15,9 @@ namespace OnlineShop.Controllers
 {
     public class ProductController : Controller
     {
-        private IProduct Iproduct;
-
-        private OnlineShopContext _database;
+        private readonly IProduct Iproduct;
+        private readonly OnlineShopContext _database;
         private readonly IHostingEnvironment hosting;
-
 
         public ProductController(IProduct p, OnlineShopContext b, IHostingEnvironment hostingEnvironment)
         {
@@ -27,6 +25,7 @@ namespace OnlineShop.Controllers
             _database = b;
             hosting = hostingEnvironment;
         }
+
 
         public IActionResult Index()
         {
@@ -52,7 +51,7 @@ namespace OnlineShop.Controllers
         public IActionResult Delete(int ID)
         {
             Iproduct.RemoveProduct(ID);
-            return Redirect("/Product/Show");
+            return Redirect("/Branch/ShowAllBranches");
         }
 
         private string SaveFile(IFormFile file)
@@ -181,7 +180,6 @@ namespace OnlineShop.Controllers
                 }).Where(e => e.SubCategoryName.StartsWith(search) || search == null);
 
             IPagedList<ShowSubCategoriesVM> lista = c.ToPagedList(page ?? 1, 6);
-
             return View(lista);
         }
 
@@ -200,7 +198,6 @@ namespace OnlineShop.Controllers
             
             return View(products);
         }
-
         public IActionResult ProductDetails(int ID)     // ID proizvoda
         {
             ProductDetailsVM model = _database.product.Where(s=>s.ProductID==ID).Select(a => new ProductDetailsVM

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.ViewModels;
-using OnlineShop.ViewModels.Branch;
 using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
 
@@ -117,19 +116,6 @@ namespace OnlineShop.Controllers
             return Redirect("/Branch/ShowAllBranches");
         }
 
-        public IActionResult ChangeQuantity(int productID)
-        {
-            var product = _product.GetProductByID(productID);
-
-            var branch = _context.branchproduct.Where(e => e.ProductID == product.ProductID).FirstOrDefault();
-
-            var model = new ChangeQuantityVM
-            {
-                productID=product.ProductID,
-                quantity=branch.UnitsInBranch
-            };
-            return PartialView(model);
-        }
 
 
 

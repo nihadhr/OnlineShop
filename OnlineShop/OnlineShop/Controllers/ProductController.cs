@@ -110,7 +110,7 @@ namespace OnlineShop.Controllers
                 if (model.ProductID == 0)
                 {
                     neki = new Product();
-                    _database.product.Add(neki);
+                    Iproduct.AddProduct(neki);
                 }
                 else
                     neki = _database.product.Find(model.ProductID);
@@ -124,19 +124,20 @@ namespace OnlineShop.Controllers
                 neki.UnitPrice = model.UnitPrice;
                 neki.UnitsInStock = model.UnitsInStock;
 
-                Iproduct.AddProduct(neki);
-
                 _database.SaveChanges();        // da bi proizvod dobio svoj id ! 
 
+                if (model.ProductID != neki.ProductID)
+                {
                     var st_pr = new StockProduct            // medjutabela
                     {
-                        StockID = 1,                  // jer je samo 1 skladiste
+                        StockID = 5,                  // jer je samo 1 skladiste
                         ProductID = neki.ProductID,
                         Quantity = neki.UnitsInStock
                     };
                     _database.Add(st_pr);
+                    _database.SaveChanges();
+                }
             }
-            _database.SaveChanges();
             return Redirect("/Product/Show");
         }
 

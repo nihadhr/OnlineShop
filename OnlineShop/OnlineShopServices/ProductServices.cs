@@ -19,7 +19,7 @@ namespace OnlineShopServices
         public void AddProduct(Product p)
         {
             _context.Add(p);
-            _context.SaveChanges();
+            //_context.SaveChanges();
         }
 
         public List<Product> GetAllProducts()

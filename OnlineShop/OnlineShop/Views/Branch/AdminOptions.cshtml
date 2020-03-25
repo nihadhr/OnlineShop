@@ -11,14 +11,7 @@
 
 <table>
     <tr>
-        <td>Izmjeni cijenu</td>
-        <td>
-            <a class="btn btn bg-primary">Promjeni</a>
-        </td>
-    </tr>
-
-    <tr>
-        <td>Uredi količinu</td>
+        <td>Uredi proizvod</td>
         <td>
             <a id="quatity-@Model.productID" class="btn btn bg-info">Uredi</a>
 
@@ -26,7 +19,7 @@
 
                 $("#quatity-@Model.productID").click(function (event) {
 
-                    $.get("/Branch/ChangeQuantity?productID=@Model.productID", function (rezultat, status) {
+                    $.get("/Product/AddProduct?ProductID=@Model.productID", function (rezultat, status) {
 
                             $("#divID").html(rezultat);
                         });

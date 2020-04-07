@@ -94,9 +94,15 @@ namespace OnlineShop.Controllers
                 if (result.Succeeded)
                     if (!string.IsNullOrEmpty(returnUrl))
                         return LocalRedirect(returnUrl);
-                    else
-                        return RedirectToAction("Index", "Home");
-                
+                    else 
+                    {
+                        var user = await userManager.FindByNameAsync(model.Email);
+                        if (await userManager.IsInRoleAsync(user, "Customer"))
+                            return RedirectToAction("Index", "Home");
+                        else
+                            return RedirectToAction("Index", "Administration");
+                    }
+
                 ModelState.AddModelError("", "Neuspješan pokušaj prijave!");
             }
             return View(model);

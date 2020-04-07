@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.ViewModels;
@@ -9,6 +10,7 @@ using OnlineShopPodaci.Model;
 
 namespace OnlineShop.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class AdministrationController : Controller
     {
         private readonly UserManager<User> userManager;
@@ -18,6 +20,10 @@ namespace OnlineShop.Controllers
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
+        }
+        public IActionResult Index()
+        {
+            return View();
         }
 
         public async Task<IActionResult> ListOfCustomers()

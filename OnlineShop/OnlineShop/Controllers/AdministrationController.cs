@@ -30,8 +30,13 @@ namespace OnlineShop.Controllers
         {
             return View();
         }
-
         public IActionResult ShowOrders()
+        {
+            return View();
+        }
+
+       
+        public IActionResult GetOrders()
         {
             var model = _database.order.Include(a => a.User).Select(s => new ShowOrdersVM
             {
@@ -52,9 +57,10 @@ namespace OnlineShop.Controllers
                 //{
                 //    ProductName = o.Product.ProductName,
                 //    Quantity = o.Quantity
-                //}).ToList()
+                //}).ToList()  //ovo sve puca jer ne mogu joini unutar kverija nesto ne dozvoljava na client side
             }).ToList();
-            foreach(var x in model)  //ovaj dio optimizovat !! !!!
+
+            foreach (var x in model)  //ovaj dio optimizovat !! !!!
             {
                 x.Items = _database.orderdetails.Include(p => p.Product).Where(g => g.OrderID == x.OrderID).Select(o => new ShowOrdersVM.Rows
                 {
@@ -62,13 +68,17 @@ namespace OnlineShop.Controllers
                     Quantity = o.Quantity
                 }).ToList();
             }
-            return View(model);
+            return PartialView(model);
         }
-        public IActionResult ShipOrder(int orderid)  //da,ne clickable
+        public IActionResult EditOrder(int id)  //da,ne clickable
         {
-            return View();
+            //ovdje ide neki VM
+            return PartialView();
         }
-
+        public IActionResult SaveOrderChanges()
+        {
+            return Redirect("GetOrders");
+        }
         public async Task<IActionResult> ListOfCustomers()
         {
             List<ListOfCustomersVM> model = new List<ListOfCustomersVM>();

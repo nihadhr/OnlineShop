@@ -1,0 +1,52 @@
+﻿@model List<ShowOrdersVM>
+@{
+    ViewData["Title"] = "ShowOrders";
+    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ShowOrders</title>
+</head>
+<body>
+    <h3>Prikaz narudžbi</h3> <br />
+    <table border="1">
+        @foreach (var x in Model) { 
+        <tr>
+            <th>Narudžba ID</th>
+            <th>Datum narudžbe</th>
+            <th>Datum slanja</th>
+            <th>Korisnik</th>
+            <th>Ukupna cijena</th>
+            <th>Narudžba isporučena</th>
+        </tr>
+        <tr>
+            
+            <td>@x.OrderID</td>
+            <td>@x.OrderDate</td>
+            <td>@x.ShipTime</td>
+            <td><a href="#">@x.UserInfo</a></td>
+            <td>@x.TotalPrice</td>
+            <td>@(x.IsShipped ? "Da":"Ne")</td>  @*//bit ce clickable, kad klikne na checkbox da postane true ako je na false, ako je na true tj isporuceno disableovana je opcija*@
+            
+        </tr>
+        <tr>
+            <th>Naziv proizvoda</th>
+            <th>Količina</th>
+        </tr>
+        @foreach(var y in x.Items)
+            {
+                <tr>
+                    <td>@y.ProductName</td>
+                    <td>@y.Quantity</td>
+                </tr>
+            }
+        }
+    
+    </table>
+
+</body>
+</html>

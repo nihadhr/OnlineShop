@@ -13,9 +13,10 @@ namespace OnlineShop.Controllers
     {
         private OnlineShopContext _database;
         private IOrder _order;
-        public OrderController(OnlineShopContext database,IOrder order)
+        private ICart _cart;
+        public OrderController(OnlineShopContext database,IOrder order,ICart cart)
         {
-            _order = order; _database = database;
+            _order = order; _database = database; _cart = cart;
         }
 
         public IActionResult OrderPreview(int userid)
@@ -37,10 +38,46 @@ namespace OnlineShop.Controllers
                 fname=user.Name,
                 lname=user.Surname,
                 adress=user.Adress,
-                phonenumber=user.PhoneNumber??"(nema)"
+                phonenumber=user.PhoneNumber??"(nije ispunjeno)",
+                
             };
+            if(user.PhoneNumber!=null && user.Adress!=null && user.Name != null && user.Surname != null){
+                model.FilledInfo = true;
+            }
             return View(model);
         }
+
+        public IActionResult SaveOrder(int userid)  //funkcija povlaci sve cart items za ovog usera a nakon toga ih briše, obzirom da je dosao do mogucnosti da Zakljuci narudzbu znaci da su svi preduslovi osigurani da se kreira zapis u tabeli Order
+        {
+            var listacart = _order.GetAllCartItemsByUser(userid);
+            
+            var order = new Order{
+                UserID=userid,
+                OrderDate=DateTime.Now,
+                TotalPrice=_order.GetTotalPrice(userid)
+            };
+            _database.Add(order);
+            _database.SaveChanges();
+            var id = _database.order.ToList().Last().OrderID; //get orderid
+            foreach (var x in listacart){
+                var item = new OrderDetails{
+                    OrderID=id,
+                    ProductID=x.ProductID,
+                    Quantity=x.Quantity,
+                };
+                _database.product.Find(x.ProductID).UnitsInStock -= x.Quantity;  //obzirom da je ovo neko kupio, taj item se umanjuje za datu kolicinu
+                _database.Add(item); _database.SaveChanges();
+            }
+            _cart.RemoveAllCartItems(userid); //obzirom da je sve prešlo u orderdetails, briše se sve iz korpe za tog usera
+
+            return Redirect("OrderMessage");
+        }
+        public IActionResult OrderMessage()
+        {
+            return View("SaveOrder");
+        }
+
+
         public IActionResult Index()
         {
             return View();

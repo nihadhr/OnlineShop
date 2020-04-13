@@ -29,7 +29,7 @@ namespace OnlineShop.Controllers
         {
             return View();
         }
-        public IActionResult GetCartItems(int userid = 6)
+        public IActionResult GetCartItems(int userid = 6)  
         {
             var listacart = _cart.GetAllCartItemsByUser(userid);
             List<LookInCartVM> listavm = listacart
@@ -40,7 +40,8 @@ namespace OnlineShop.Controllers
                 ProductName = _database.product.Find(s.ProductID).ProductName,
                 SubCategoryName = _database.subcategory.Find(_database.product.Find(s.ProductID).SubCategoryID).SubCategoryName,
                 UnitPrice = _database.product.Find(s.ProductID).UnitPrice,
-                Quantity = s.Quantity
+                Quantity = s.Quantity,
+                ActualQuantity= _database.product.Find(s.ProductID).UnitsInStock
             }
             ).ToList();
             return PartialView(listavm);
@@ -72,7 +73,8 @@ namespace OnlineShop.Controllers
                 ProductName = _database.product.Find(s.ProductID).ProductName,
                 SubCategoryName = _database.subcategory.Find(_database.product.Find(s.ProductID).SubCategoryID).SubCategoryName,
                 UnitPrice = _database.product.Find(s.ProductID).UnitPrice,
-                Quantity = s.Quantity
+                Quantity = s.Quantity,
+                ActualQuantity=_database.product.Find(s.ProductID).UnitsInStock
             }
             ).ToList();
             return PartialView("GetCartItems",listavm);

@@ -33,24 +33,38 @@ namespace OnlineShop.Controllers
 
         public IActionResult ShowOrders()
         {
-            var model = _database.order.Include(a=>a.User).Select(s => new ShowOrdersVM
+            var model = _database.order.Include(a => a.User).Select(s => new ShowOrdersVM
             {
-                OrderID=s.OrderID,
-                OrderDate=s.OrderDate,
-                ShipTime=s.ShipDate,
-                IsShipped=s.IsShipped,
-                UserID=s.UserID,
-                UserInfo=s.User.Name+" "+s.User.Surname+" "+s.User.Adress+" | "+s.User.PhoneNumber,
-                TotalPrice=s.TotalPrice,
-                Items=_database.orderdetails.Where(g=>g.OrderID==s.OrderID).Include(p=>p.Product).Select(o=>new ShowOrdersVM.Rows
-                {
-                    ProductName=o.Product.ProductName,
-                    Quantity=o.Quantity
-                }).ToList()
+                OrderID = s.OrderID,
+                OrderDate = s.OrderDate,
+                ShipTime = s.ShipDate,
+                IsShipped = s.IsShipped,
+                UserID = s.UserID,
+                UserInfo = s.User.Name + " " + s.User.Surname + " | " + s.User.Adress + " | " + s.User.PhoneNumber,
+                TotalPrice = s.TotalPrice,
+                //Items = _order.GetAllCartItemsByUser(s.UserID).Select(p => new ShowOrdersVM.Rows
+                //{
+                //    ProductName = p.Product.ProductName,
+                //    Quantity = p.Quantity
+                //}).ToList()
+
+                //Items = _database.orderdetails.Where(g => g.OrderID == s.OrderID).Include(p => p.Product).ToList().Select(o => new ShowOrdersVM.Rows
+                //{
+                //    ProductName = o.Product.ProductName,
+                //    Quantity = o.Quantity
+                //}).ToList()
             }).ToList();
+            foreach(var x in model)  //ovaj dio optimizovat !! !!!
+            {
+                x.Items = _database.orderdetails.Include(p => p.Product).Where(g => g.OrderID == x.OrderID).Select(o => new ShowOrdersVM.Rows
+                {
+                    ProductName = o.Product.ProductName,
+                    Quantity = o.Quantity
+                }).ToList();
+            }
             return View(model);
         }
-        public IActionResult ShipOrder(int orderid)
+        public IActionResult ShipOrder(int orderid)  //da,ne clickable
         {
             return View();
         }

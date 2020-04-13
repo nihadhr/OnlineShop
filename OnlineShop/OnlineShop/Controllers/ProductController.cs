@@ -320,7 +320,6 @@ namespace OnlineShop.Controllers
         {
             var product = _Iproduct.GetProductByID(model.productID);
             var sum = 0;
-            // za svaku prodavnicu rasporedjujemo proizvode
 
             foreach (var i in model._list)
             {

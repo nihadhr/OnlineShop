@@ -206,22 +206,8 @@ namespace OnlineShop.Controllers
             return View(lista);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> ShowProducts(string search)
-        //{
-        //    ViewData["data"] = search;
-
-        //    var query = from x in _database.product select x;
-
-        //    if (!String.IsNullOrEmpty(search))
-        //    {
-        //        query = query.Where(x => x.ProductName.Contains(search));
-        //    }
-        //    return View(await query.AsNoTracking().ToListAsync());
-        //}
 
         [HttpGet]
-
         public async Task<IActionResult> ShowProducts(int ID,string search)       // ID podkategorije 
         {
             ViewData["data"] = search;
@@ -267,22 +253,29 @@ namespace OnlineShop.Controllers
             return View(model);
         }
 
-
-        public IActionResult ShowStock()
+        [HttpGet]
+        public async Task<IActionResult> ShowStock(string search)
         {
+            ViewData["data"] = search;
+
             var products = _Iproduct.GetAllProducts();
 
-            var model = new ShowProductsInStockVM
+            var model = products.Select(e => new ShowProductsInStockVM
             {
-                _lista = products.Select(e => new ShowProductsInStockVM.rows
-                {
-                    ProductID=e.ProductID,
-                    ProductName=e.ProductName,
-                    Price=e.UnitPrice,
-                    Quantity=_database.stockproduct.Where(a=>a.ProductID==e.ProductID).Select(a=>a.Quantity).FirstOrDefault()
-                }).ToList()
-            };
-            return View(model);
+                ProductID = e.ProductID,
+                ProductName = e.ProductName,
+                Price = e.UnitPrice,
+                Quantity = _database.stockproduct.Where(a => a.ProductID == e.ProductID).Select(a => a.Quantity).FirstOrDefault()
+
+            }).ToList();
+
+            var query = from x in model select x;
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.ProductName.Contains(search));
+            }
+            return View(await query.ToListAsync());
         }
 
         public IActionResult DistributeProduct(int productID)

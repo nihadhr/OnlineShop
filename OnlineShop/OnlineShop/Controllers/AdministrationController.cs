@@ -104,7 +104,27 @@ namespace OnlineShop.Controllers
             var user = await userManager.FindByIdAsync(id.ToString());
             await userManager.RemoveFromRoleAsync(user, "Customer");
             await userManager.AddToRoleAsync(user, "Admin");
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("ListOfCustomers", "Administration");
+
+        }
+        public IActionResult UserDetails(int id)
+        {
+
+            var u= _database.user.Find(id);
+            UserDetailsVM model = new UserDetailsVM
+            {
+                Id = id,
+                Name = u.Name,
+                Surname = u.Surname,
+                BirthDate = u.BirthDate,
+                Adress = u.Adress,
+                PhoneNumber = u.PhoneNumber,
+                //CityName = u.City.CityName,
+                //Gender = u.Gender._Gender,
+                Email=u.Email
+            };
+
+            return View(model);
 
         }
 

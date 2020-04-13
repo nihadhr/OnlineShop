@@ -147,7 +147,7 @@ namespace OnlineShop.Controllers
                 {
                     var st_pr = new StockProduct            // medjutabela
                     {
-                        StockID = 5,                                                                         // jer je samo 1 skladiste
+                        StockID = 1,                                                                         // jer je samo 1 skladiste
                         ProductID = neki.ProductID,
                         Quantity = neki.UnitsInStock
                     };
@@ -324,7 +324,7 @@ namespace OnlineShop.Controllers
 
             foreach (var i in model._list)
             {
-                var bp = _database.branchproduct.Where(e => e.BranchID == i.branchID).FirstOrDefault();
+                var bp = _database.branchproduct.Where(e => e.BranchID == i.branchID && e.ProductID==product.ProductID).FirstOrDefault();
                 if (bp!=null && model.productID == bp.ProductID)
                 {
                     bp.UnitsInBranch += i.quntityPerBranch;

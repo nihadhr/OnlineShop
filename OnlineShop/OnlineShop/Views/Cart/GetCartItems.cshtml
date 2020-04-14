@@ -38,7 +38,7 @@ else
                     <script>
                     $("#@x.ProductID").change(function () {
                         var x = $("#@x.ProductID").val();
-                        $.get("/Cart/SetQuantity?productid=@x.ProductID&userid=6&q=" + x, function (res) {
+                        $.get("/Cart/SetQuantity?productid=@x.ProductID&q=" + x, function (res) {
                             $("#tabela").html(res);
                         });
                         $("#row-@x.ProductID").css({ 'background-color': '#91BD09', 'opacity': '0.95','transition':'width 2s' });
@@ -52,7 +52,7 @@ else
                     <button id="btn-@x.ProductID">Ukloni iz korpe</button>
                     <script>
                         $("#btn-@x.ProductID").click(function () {
-                            $.get("/Cart/RemoveFromCart?productid=@x.ProductID&userid=6", function (Res) {
+                            $.get("/Cart/RemoveFromCart?productid=@x.ProductID", function (Res) {
                                 $("#tabela").html(Res);
                             });
                         });
@@ -84,11 +84,11 @@ else
 
 <script>
     $("#delete").click(function () {
-        $.get("/Cart/DeleteCart?userid=6", function (res) {
+        $.get("/Cart/DeleteCart", function (res) {
             $("#tabela").html(res);
         });
     });
     $("#proceed").click(function () {
-        document.location = "/Order/OrderPreview?userid=6";
+        document.location = "/Order/OrderPreview";
     });
 </script>

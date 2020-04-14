@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShopPodaci.Model;
 using OnlineShopPodaci;
 using OnlineShop.ViewModels;
+using System.Security.Claims;
 
 namespace OnlineShop.Controllers
 {
@@ -19,8 +20,9 @@ namespace OnlineShop.Controllers
             _order = order; _database = database; _cart = cart;
         }
 
-        public IActionResult OrderPreview(int userid)
+        public IActionResult OrderPreview()
         {
+            var userid = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var listacart = _order.GetAllCartItemsByUser(userid);
             var user = _database.user.Find(userid);
             var model = new OrderPreviewVM
@@ -47,8 +49,9 @@ namespace OnlineShop.Controllers
             return View(model);
         }
 
-        public IActionResult SaveOrder(int userid)  //funkcija povlaci sve cart items za ovog usera a nakon toga ih briše, obzirom da je dosao do mogucnosti da Zakljuci narudzbu znaci da su svi preduslovi osigurani da se kreira zapis u tabeli Order
+        public IActionResult SaveOrder()  //funkcija povlaci sve cart items za ovog usera a nakon toga ih briše, obzirom da je dosao do mogucnosti da Zakljuci narudzbu znaci da su svi preduslovi osigurani da se kreira zapis u tabeli Order
         {
+            var userid = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var listacart = _order.GetAllCartItemsByUser(userid);
             
             var order = new Order{

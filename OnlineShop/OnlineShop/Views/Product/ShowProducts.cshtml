@@ -153,7 +153,7 @@
         //user,productid,quantity are sent
         var request = new XMLHttpRequest();
         request.onreadystatechange = function () { };
-        request.open('POST', "/Cart/AddToCart/?productid=" + id + "&userid=" + 6 + "&q=" + quantity);
+        request.open('POST', "/Cart/AddToCart/?productid=" + id + "&userid=" + 19 + "&q=" + quantity);
         request.send()
         document.getElementById(id).value = 1;
         document.getElementById("Added").style.display = "block";

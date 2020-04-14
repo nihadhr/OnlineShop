@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "Detalji korisnika";
+}
+
+@model UserDetailsVM
+
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4 class="text-success">@Model.Name @Model.Surname</h4>
+            </div>
+            
+            <div class="card-body text-center">
+
+                <h4 class="text-danger">Id korisnika: @Model.Id</h4>
+                <h4 class="text-warning">E-mail: @Model.Email</h4>
+                <h4 class="text-primary">Datum rodjenja: @Model.BirthDate</h4>
+                <h4 class="text-primary">Adresa: @Model.Adress</h4>
+                <h4 class="text-primary">Broj telefona: @Model.PhoneNumber</h4>
+                <h4 class="text-primary">Mjesto prebivalista: @Model.CityName</h4>
+                <h4 class="text-primary">Spol: @Model.Gender</h4>
+            </div>
+            <div class="card-footer text-center">
+                <a href="/Administration/EditUser?id=@Model.Id" class="btn btn-warning">Uredi</a>
+                <a href="/Administration/DeleteUser?id=@Model.Id" class="btn btn-danger">Obriši korisnika</a>
+
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+</div>

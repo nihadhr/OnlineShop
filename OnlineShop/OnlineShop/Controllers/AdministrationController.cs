@@ -4,11 +4,13 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.ViewModels;
 using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
+using X.PagedList;
 
 namespace OnlineShop.Controllers
 {
@@ -19,12 +21,16 @@ namespace OnlineShop.Controllers
         private readonly RoleManager<Role> roleManager;
         private IOrder _order;
         private OnlineShopContext _database;
-        public AdministrationController(UserManager<User> userManager,RoleManager<Role>roleManager,IOrder order,OnlineShopContext _database)
+       
+
+        public AdministrationController(UserManager<User> userManager,RoleManager<Role>roleManager,IOrder order,
+            OnlineShopContext _database)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             _order = order;
             this._database = _database;
+          
         }
         public IActionResult Index()
         {
@@ -105,7 +111,7 @@ namespace OnlineShop.Controllers
 
 
 
-        public async Task<IActionResult> ListOfCustomers()
+        public async Task<IActionResult> ListOfCustomers(int? page)
         {
             List<ListOfCustomersVM> model = new List<ListOfCustomersVM>();
             foreach(var user in userManager.Users)
@@ -123,7 +129,8 @@ namespace OnlineShop.Controllers
                 }
 
             }
-            return View(model);
+            IPagedList<ListOfCustomersVM> lista = model.ToPagedList(page ?? 1, 5);
+            return View(lista);
         }
         public async Task<IActionResult> SetForAdmin(int id)
         {

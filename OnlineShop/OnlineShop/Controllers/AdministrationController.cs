@@ -46,39 +46,65 @@ namespace OnlineShop.Controllers
                 IsShipped = s.IsShipped,
                 UserID = s.UserID,
                 UserInfo = s.User.Name + " " + s.User.Surname + " | " + s.User.Adress + " | " + s.User.PhoneNumber,
-                TotalPrice = s.TotalPrice,
-                //Items = _order.GetAllCartItemsByUser(s.UserID).Select(p => new ShowOrdersVM.Rows
-                //{
-                //    ProductName = p.Product.ProductName,
-                //    Quantity = p.Quantity
-                //}).ToList()
+                TotalPrice = s.TotalPrice
 
-                //Items = _database.orderdetails.Where(g => g.OrderID == s.OrderID).Include(p => p.Product).ToList().Select(o => new ShowOrdersVM.Rows
-                //{
-                //    ProductName = o.Product.ProductName,
-                //    Quantity = o.Quantity
-                //}).ToList()  //ovo sve puca jer ne mogu joini unutar kverija nesto ne dozvoljava na client side
             }).ToList();
 
-            foreach (var x in model)  //ovaj dio optimizovat !! !!!
-            {
-                x.Items = _database.orderdetails.Include(p => p.Product).Where(g => g.OrderID == x.OrderID).Select(o => new ShowOrdersVM.Rows
-                {
-                    ProductName = o.Product.ProductName,
-                    Quantity = o.Quantity
-                }).ToList();
-            }
             return PartialView(model);
         }
-        public IActionResult EditOrder(int id)  //da,ne clickable
+        public IActionResult EditOrder(int id)  
         {
             //ovdje ide neki VM
-            return PartialView();
+            var order = _database.order.FirstOrDefault(s=>s.OrderID==id);
+            var User = _database.user.Find(order.UserID);
+            var model = new EditOrderVM {
+                OrderID = id,
+                UserId = order.UserID,
+                IsShipped = order.IsShipped,
+                OrderDate = order.OrderDate.ToString(),
+                UserInfo = User.Name + " " + User.Surname + ", " + User.Adress + "| " + User.PhoneNumber,
+                items = _database.orderdetails.Include(i => i.Product).Where(w => w.OrderID == id).Select(o => new EditOrderVM.Rows
+                {
+                    ProductID = o.ProductID,
+                    ProductName = o.Product.ProductName,
+                    Quantity = o.Quantity,
+                   
+                }).ToList(),
+
+            };
+            return PartialView(model);
         }
-        public IActionResult SaveOrderChanges()
-        {
-            return Redirect("GetOrders");
+        public IActionResult DistributeProduct(int id,int orderid)
+        { var order = _database.orderdetails.FirstOrDefault(w => w.ProductID == id && w.OrderID == orderid);
+            var product = _database.product.Find(id);
+            var model = new BranchQuantityVM
+            {
+                ProductID=id,
+                ProductName=product.ProductName,
+                RequiredQuantity=order.Quantity,  
+                branches=_database.branchproduct.Include(a=>a.Branch).Where(q=>q.ProductID==id).Select(s=>new BranchQuantityVM.Rows
+                { 
+                    BranchID=s.BranchID,
+                    BranchName=s.Branch.BranchName,
+                    UnitsInBranch=s.UnitsInBranch??0,
+                    
+                }).ToList()
+
+            };
+            return PartialView(model);
         }
+        //public IActionResult SaveOrderChanges(EditOrderVM model)
+        //{
+        //    var order = _database.order.Include(u => u.User).FirstOrDefault(s => s.OrderID == model.Id);
+        //    order.IsShipped = true;   
+        //    order.ShipDate = DateTime.Now;
+        //    _database.SaveChanges();
+        //    return Redirect("GetOrders");
+        //}
+
+
+
+
         public async Task<IActionResult> ListOfCustomers()
         {
             List<ListOfCustomersVM> model = new List<ListOfCustomersVM>();

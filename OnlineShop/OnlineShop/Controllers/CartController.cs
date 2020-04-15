@@ -52,8 +52,6 @@ namespace OnlineShop.Controllers
             return PartialView(listavm);
         }
       
-
-
         public IActionResult RemoveFromCart(int productid)
         {
             var userid = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

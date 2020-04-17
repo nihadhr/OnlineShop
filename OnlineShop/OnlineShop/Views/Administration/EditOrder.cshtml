@@ -3,39 +3,18 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-    <p>Detalji narudžbe</p> <br />
+
+
+
+ <p>Detalji narudžbe</p> <br />
    
     <form>
    Narudzba rb <input readonly asp-for="OrderID" value="@Model.OrderID"/> <br />
     Datum narudžbe<input readonly asp-for="OrderDate" value="@Model.OrderDate" /><br />
     Korisnik<input readonly value="@Model.UserInfo"/> <br />
-    Isporučeno @if (Model.IsShipped)
-    {<input readonly disabled type="checkbox" checked>}
-    else {<input readonly disabled type="checkbox"> }<br />  @*//ako je isporuceno ovo polje je checked i nema se mogucnosti za raspodjelu*@
-    @foreach(var x in Model.items)
-    {
-        <div id="div+@x.ProductID">
-            <table border="1">
-                <tr>
-                    <th>Proizvod</th><th>Količina</th><th>Raspodjeljen</th>
-                </tr>
-                <tr><td>@x.ProductName</td><td>@x.Quantity</td><td>     @if (Model.IsShipped) { <button disabled type="button" id="@x.ProductID">@(x.Flag ? "Da" : "Ne")</button>}
-                else { <button type="button" id="@x.ProductID">@(x.Flag ? "Da" : "Ne")</button>}
-                    <script>
-                        $("#@x.ProductID").click(function () {
-                            $.get("/Administration/DistributeProduct?id=" + @x.ProductID + "&orderid=@Model.OrderID", function (res) {
-                                $("#chng").html(res);
-                            });
-                        });
-                    </script>
-                    
-                    </td></tr>
-            </table>
-        </div>
-    }
-
-
-    <button type="button" id="btn">Odobri narudžbu za slanje</button>
+   <input hidden id="fleg" value="@Model.IsShipped"/>  @*//ako je isporuceno ovo polje je checked i nema se mogucnosti za raspodjelu*@
+    onclick="SaveChanges()" id="btn">Odobri narudžbu za slanje</button>
+        <button type="button" id="abort">Nazad</button>
     </form>
     <br />
     <div id="chng" style="border:solid black 1px;margin:3px;">
@@ -46,26 +25,3 @@
 
 
 
-    <script>
-
-        @*function Distribute(id){
-            $.get("/Administration/DistributeProduct?id=" + id+"&orderid=@Model.OrderID", function (res) {
-                $("#chng").html(res);
-            });
-        }*@  //višak
-
-
-        $("#btn").click = function () {
-            $.ajax({
-                type: "POST",
-                url: "/Administration/SaveOrderChanges",
-                data: form.serialize(),
-                success: function (data) {
-                    $("#table").html(data);
-                }
-            });
-        };
-        //function Delete(id) {
-
-        //}
-    </script>

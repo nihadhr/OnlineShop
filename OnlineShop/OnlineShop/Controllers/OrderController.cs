@@ -57,7 +57,8 @@ namespace OnlineShop.Controllers
             var order = new Order{
                 UserID=userid,
                 OrderDate=DateTime.Now,
-                TotalPrice=_order.GetTotalPrice(userid)
+                TotalPrice=_order.GetTotalPrice(userid),
+                OrderStatusID=1
             };
             _database.Add(order);
             _database.SaveChanges();

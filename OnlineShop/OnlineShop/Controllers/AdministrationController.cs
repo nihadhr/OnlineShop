@@ -44,12 +44,13 @@ namespace OnlineShop.Controllers
        
         public IActionResult GetOrders()
         {
-            var model = _database.order.Include(a => a.User).Select(s => new ShowOrdersVM
+            var model = _database.order.Include(i=>i.OrderStatus).Include(a => a.User).Select(s => new ShowOrdersVM
             {
                 OrderID = s.OrderID,
                 OrderDate = s.OrderDate,
                 ShipTime = s.ShipDate,
-                IsShipped = s.IsShipped,
+                OrderStatusID=s.OrderStatusID,
+                Status=s.OrderStatus.Status,
                 UserID = s.UserID,
                 UserInfo = s.User.Name + " " + s.User.Surname + " | " + s.User.Adress + " | " + s.User.PhoneNumber,
                 TotalPrice = s.TotalPrice
@@ -66,7 +67,7 @@ namespace OnlineShop.Controllers
             var model = new EditOrderVM {
                 OrderID = id,
                 UserId = order.UserID,
-                IsShipped = order.IsShipped,
+                //IsShipped = order.IsShipped,
                 OrderDate = order.OrderDate.ToString(),
                 UserInfo = User.Name + " " + User.Surname + ", " + User.Adress + "| " + User.PhoneNumber,
                 items = _database.orderdetails.Include(i => i.Product).Where(w => w.OrderID == id).Select(o => new EditOrderVM.Rows
@@ -80,25 +81,9 @@ namespace OnlineShop.Controllers
             };
             return PartialView(model);
         }
-        public IActionResult DistributeProduct(int id,int orderid)
-        { var order = _database.orderdetails.FirstOrDefault(w => w.ProductID == id && w.OrderID == orderid);
-            var product = _database.product.Find(id);
-            var model = new BranchQuantityVM
-            {
-                ProductID=id,
-                ProductName=product.ProductName,
-                RequiredQuantity=order.Quantity,  
-                branches=_database.branchproduct.Include(a=>a.Branch).Where(q=>q.ProductID==id).Select(s=>new BranchQuantityVM.Rows
-                { 
-                    BranchID=s.BranchID,
-                    BranchName=s.Branch.BranchName,
-                    UnitsInBranch=s.UnitsInBranch??0,
-                    
-                }).ToList()
-
-            };
-            return PartialView(model);
-        }
+        
+     
+        
         //public IActionResult SaveOrderChanges(EditOrderVM model)
         //{
         //    var order = _database.order.Include(u => u.User).FirstOrDefault(s => s.OrderID == model.Id);

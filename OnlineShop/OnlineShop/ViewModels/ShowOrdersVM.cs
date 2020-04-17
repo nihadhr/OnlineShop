@@ -13,7 +13,8 @@ namespace OnlineShop.ViewModels
         public int UserID { get; set; }  //za pregled profila, napravit nesto tipa /ShowInfo?userid=666 cisto da admin ima uvida u tog korisnika, njegove informacije neke
         public string UserInfo { get; set; } //u stringu spojeno ime prezime i adresa sa brojem telefona
         public double TotalPrice { get; set; }
-        public bool IsShipped { get; set; }
+        public int OrderStatusID { get; set; }
+        public string Status { get; set; }
     }
 
 }

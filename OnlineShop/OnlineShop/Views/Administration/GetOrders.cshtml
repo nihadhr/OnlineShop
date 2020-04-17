@@ -13,7 +13,7 @@
                 <th>Datum slanja</th>
                 <th>Korisnik</th>
                 <th>Ukupna cijena</th>
-                <th>Narudžba isporučena</th>
+                <th>Stanje narudžbe</th>
                 <th>Akcija</th>
             </tr>
             <tr>
@@ -23,7 +23,7 @@
                 <td>@x.ShipTime</td>
                 <td><a href="#">@x.UserInfo</a></td>
                 <td>@x.TotalPrice</td>
-                <td>@(x.IsShipped ? "Da" : "Ne")</td>  @*//bit ce clickable, kad klikne na checkbox da postane true ako je na false, ako je na true tj isporuceno disableovana je opcija*@
+                <td>@x.Status</td> 
                 <td>
                     <button id="edit" onclick="Edit(@x.OrderID)">Detalji</button>
                 </td>

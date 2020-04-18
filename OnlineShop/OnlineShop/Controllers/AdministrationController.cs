@@ -62,36 +62,49 @@ namespace OnlineShop.Controllers
         public IActionResult EditOrder(int id)  
         {
             //ovdje ide neki VM
-            var order = _database.order.FirstOrDefault(s=>s.OrderID==id);
+            var order = _database.order.Include(i=>i.OrderStatus).FirstOrDefault(s=>s.OrderID==id);
             var User = _database.user.Find(order.UserID);
             var model = new EditOrderVM {
                 OrderID = id,
                 UserId = order.UserID,
-                //IsShipped = order.IsShipped,
+                OrderStatus=_database.orderstatus.Find(order.OrderStatusID).Status,
                 OrderDate = order.OrderDate.ToString(),
                 UserInfo = User.Name + " " + User.Surname + ", " + User.Adress + "| " + User.PhoneNumber,
-                items = _database.orderdetails.Include(i => i.Product).Where(w => w.OrderID == id).Select(o => new EditOrderVM.Rows
+                items = _database.orderdetails.Include(i => i.Product).Where(w => w.OrderID == id).Select(o => new EditOrderVM.Products
                 {
                     ProductID = o.ProductID,
                     ProductName = o.Product.ProductName,
-                    Quantity = o.Quantity,
-                   
+                    RequiredQuantity=o.Quantity
                 }).ToList(),
 
             };
+            foreach(var x in model.items)
+            {
+                x.branches = _database.branchproduct.Include(b=>b.Branch).Where(a=>a.ProductID==x.ProductID && a.UnitsInBranch>0).Select(s => new EditOrderVM.Products.Branches
+                {
+                    BranchID=s.BranchID,
+                    BranchName=s.Branch.BranchName,
+                    AvailableQuantity=s.UnitsInBranch??0,
+                    Input=0
+                }).ToList();
+            }
             return PartialView(model);
         }
-        
-     
-        
-        //public IActionResult SaveOrderChanges(EditOrderVM model)
-        //{
-        //    var order = _database.order.Include(u => u.User).FirstOrDefault(s => s.OrderID == model.Id);
-        //    order.IsShipped = true;   
-        //    order.ShipDate = DateTime.Now;
-        //    _database.SaveChanges();
-        //    return Redirect("GetOrders");
-        //}
+
+
+
+        public IActionResult SaveOrderChanges(EditOrderVM model)
+        {  //ovdje idu provjere modela, ako ne odgovara vrati poruku o greški
+
+            var a = model.items.First().ProductID;
+            var b = model.items.First().branches.First().BranchID;
+            var c = model.items.First().branches.First().Input;
+
+
+
+            ViewData["msg"] = "Raspodjela nije ispravna. Pokušajte ponovo !";
+            return PartialView("SuccessMessage");
+        }
 
 
 

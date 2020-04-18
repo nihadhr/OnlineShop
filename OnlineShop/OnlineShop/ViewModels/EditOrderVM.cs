@@ -11,16 +11,22 @@ namespace OnlineShop.ViewModels
         public int OrderID { get; set; }
         public int UserId { get; set; }
         public string UserInfo { get; set; }
-        public bool IsShipped{get;set;}
+        public string OrderStatus { get; set; } 
         public string OrderDate { get; set; }
-        public List<Rows> items { get; set; }
-        public class Rows
+        public List<Products> items { get; set; }
+        public class Products
         {
             public int ProductID { get; set; }
             public string ProductName { get; set; }
-            public int Quantity { get; set; }
-            public bool Flag { get; set; }
-            
+            public int RequiredQuantity { get; set; }
+            public List<Branches> branches { get; set; }
+            public class Branches
+            {
+                public int BranchID { get; set; }
+                public string BranchName { get; set; }
+                public int AvailableQuantity { get; set; }
+                public int Input { get; set; }
+            }
         }
     }
 }

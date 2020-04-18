@@ -18,6 +18,7 @@ namespace OnlineShop.ViewModels
             public string BranchName { get; set; }
             public int UnitsInBranch { get; set; }
             public int Input { get; set; }
+            
         }
 
     }

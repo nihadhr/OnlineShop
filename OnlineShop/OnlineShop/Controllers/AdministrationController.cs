@@ -126,7 +126,19 @@ namespace OnlineShop.Controllers
 
             return PartialView("SuccessMessage");
         }
+        public IActionResult CancelOrder(int orderid)
+        {
+            var order = _database.order.Find(orderid);
+            order.OrderStatusID = 3;
+            order.OrderStatus = _database.orderstatus.Find(3);
+            foreach(var x in _database.orderdetails.Where(a => a.OrderID == orderid).ToList())
+            {
+                x.Product.UnitsInStock += x.Quantity;
+            }
+            _database.SaveChanges();
 
+            return PartialView();
+        }
 
 
 

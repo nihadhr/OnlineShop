@@ -59,10 +59,11 @@ namespace OnlineShop.Controllers
 
             return PartialView(model);
         }
-        public IActionResult EditOrder(int id)  
+        public IActionResult EditOrder(int id,bool again=false)  
         {
-            //ovdje ide neki VM
-            var order = _database.order.Include(i=>i.OrderStatus).FirstOrDefault(s=>s.OrderID==id);
+            
+               //ovdje ide neki VM
+               var order = _database.order.Include(i=>i.OrderStatus).FirstOrDefault(s=>s.OrderID==id);
             var User = _database.user.Find(order.UserID);
             var model = new EditOrderVM {
                 OrderID = id,
@@ -88,6 +89,10 @@ namespace OnlineShop.Controllers
                     Input=0
                 }).ToList();
             }
+            if (again == true)
+            {
+                TempData["msg"] = "Raspodjela nije ispravna.Pokušajte ponovo !";
+            }
             return PartialView(model);
         }
 
@@ -96,13 +101,29 @@ namespace OnlineShop.Controllers
         public IActionResult SaveOrderChanges(EditOrderVM model)
         {  //ovdje idu provjere modela, ako ne odgovara vrati poruku o greški
 
-            var a = model.items.First().ProductID;
-            var b = model.items.First().branches.First().BranchID;
-            var c = model.items.First().branches.First().Input;
+            //var a = model.items.First().ProductID;
+            //var b = model.items.First().branches.First().BranchID;
+            //var c = model.items.First().branches.First().Input;
+            var order = _database.order.Find(model.OrderID);
 
+            foreach (var x in model.items)
+            {
+                var a = 0;
+                foreach (var y in x.branches)
+                {
+                    a += y.Input;
+                    _database.branchproduct.FirstOrDefault(a => a.BranchID == y.BranchID && x.ProductID == a.ProductID).UnitsInBranch -= y.Input;
 
+                }
+                if (a != x.RequiredQuantity)
+                {
+                   return Redirect("/Administration/EditOrder?id="+model.OrderID+"&again="+true);
+                }
+            }
+            order.OrderStatusID = 2;
+            order.OrderStatus = _database.orderstatus.Find(2);
+            _database.SaveChanges();
 
-            ViewData["msg"] = "Raspodjela nije ispravna. Pokušajte ponovo !";
             return PartialView("SuccessMessage");
         }
 

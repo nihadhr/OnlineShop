@@ -36,7 +36,14 @@ namespace OnlineShop.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            List<ShowCategoriesVM> data = _database.category.Select(c => new ShowCategoriesVM
+            {
+                CategoryID = c.CategoryID,
+                CategoryName = c.CategoryName,
+                imageurl = c.ImageUrl
+            }).ToList();
+
+            return View(data);
         }
 
         
@@ -161,27 +168,106 @@ namespace OnlineShop.Controllers
 
         public IActionResult AddManufacturer(int ProductID)
         {
-            ViewData["idP"] =ProductID;
-            return View("AddManufacturer");
+            var product = _Iproduct.GetProductByID(ProductID);
+            var model = new AddManufacturerVM
+            {
+                productID=ProductID
+            };
+            return View(model);
         }
 
-        public IActionResult SaveManufacturer(string manufacturerName, string logoURL,int ProductID)
+        public IActionResult SaveManufacturer(AddManufacturerVM model)
         {
+            string uniquefileName = null;
+            if (model.Image != null)
+            {
+                string uploadsFolder = Path.Combine(hosting.WebRootPath, "images");
+                uniquefileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniquefileName);
+                model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+            }
+
             Manufacturer manufacturer = new Manufacturer
             {
-                ManufacturerName = manufacturerName,
-                LogoUrl = logoURL
+                ManufacturerName = model.manufacturerName,
+                LogoUrl = uniquefileName
             };
-
-            _database.manufacturer.Add(manufacturer);
-            _database.SaveChanges();
-            return Redirect($"/Product/AddProduct?={ProductID}");
-
+            _Iproduct.AddManufacturer(manufacturer);
+            return Redirect($"/Product/AddProduct?={model.productID}");
         }
+
+        public IActionResult AddCategory()
+        {
+            var model = new AddCategoryVM
+            {
+            };
+            return View(model);
+        }
+
+        public IActionResult SaveCategory(AddCategoryVM model)
+        {
+            string uniquefileName = null;
+            if (model.Image != null)
+            {
+                string uploadsFolder = Path.Combine(hosting.WebRootPath, "images");
+                uniquefileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniquefileName);
+                model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+            }
+            Category category = new Category
+            {
+                CategoryName=model.categoryName,
+                ImageUrl=uniquefileName
+            };
+            _Iproduct.AddCategory(category);
+            return Redirect("/Administration/Index");
+        }
+
+        public IActionResult AddSubCategory()
+        {
+
+            var model = new AddSubCategoryVM
+            {
+                _lista=_database.category.Select(e=>new SelectListItem
+                {
+                    Value=e.CategoryID.ToString(),
+                    Text=e.CategoryName
+                }).ToList()
+            };
+            return View(model);
+        }
+        public IActionResult SaveSubCategory(AddSubCategoryVM model)
+        {
+            string uniquefileName = null;
+            if (model.Image != null)
+            {
+                string uploadsFolder = Path.Combine(hosting.WebRootPath, "images");
+                uniquefileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniquefileName);
+                model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+            }
+
+            SubCategory subcategory = new SubCategory
+            {
+                SubCategoryName=model.subcategoryName,
+                CategoryID=model.categoryID,
+                ImageUrl=uniquefileName
+            };
+            _Iproduct.AddSubCategory(subcategory);
+            return Redirect("/Administration/Index");
+        }
+
+
+
 
         public IActionResult Show2()       
         {
-           List<ShowCategoriesVM >data = _database.category.Select(c => new ShowCategoriesVM { CategoryID = c.CategoryID, CategoryName = c.CategoryName }).ToList();
+           List<ShowCategoriesVM >data = _database.category.Select(c => new ShowCategoriesVM
+           {
+               CategoryID = c.CategoryID,
+               CategoryName = c.CategoryName,
+               imageurl=c.ImageUrl
+           }).ToList();
             
             return View(data);
         }

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineShop.ViewModels;
 using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
@@ -174,7 +176,7 @@ namespace OnlineShop.Controllers
         public IActionResult UserDetails(int id)
         {
 
-            var u= _database.user.Find(id);
+            var u= _database.user.Where(u => u.Id == id).Include(u=>u.Gender).Include(u=>u.City).FirstOrDefault();
             UserDetailsVM model = new UserDetailsVM
             {
                 Id = id,
@@ -185,12 +187,41 @@ namespace OnlineShop.Controllers
                 PhoneNumber = u.PhoneNumber,
                 //CityName = u.City.CityName,
                 //Gender = u.Gender._Gender,
-                Email=u.Email
+                Email =u.Email,
+                NumberOfTransactions=_database.order.Where(o=>o.UserID==id).Count(),
+                rows=_database.order.Where(o=>o.UserID==id).Select(o=>new UserDetailsVM.ROW
+                {
+                    TransactionID=o.OrderID,
+                    OrderDate=o.OrderDate,
+                    ShipDate=o.ShipDate,
+                    TotalPrice=o.TotalPrice,
+                    NumberOfProducts=_database.orderdetails.Where(od=>od.OrderID==o.OrderID).Sum(od=>od.Quantity)
+                }).ToList()
+                
             };
 
             return View(model);
 
         }
 
+        [HttpGet]
+        public IActionResult EditAdminProfile()
+        {
+            var id = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = _database.user.Where(u => u.Id == id).Include(u => u.City).Include(u => u.Gender).FirstOrDefault();
+            var model = new EditAdminProfileVM
+            {
+                Name=user.Name,
+                Surname=user.Surname,
+                BirthDate=user.BirthDate,
+                CityID=user.CityID,
+                City=_database.city.Select(c=> new SelectListItem { Value=c.CityID.ToString(),Text=c.CityName}).ToList(),
+                Adress=user.Adress,
+                PhoneNumber=user.PhoneNumber,
+                GenderID=user.GenderID,
+                Gender= _database.gender.Select(c => new SelectListItem { Value = c.GenderID.ToString(), Text = c._Gender }).ToList()
+            };
+            return View(model);
+        }
     }
 }

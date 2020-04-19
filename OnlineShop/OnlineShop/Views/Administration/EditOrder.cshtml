@@ -55,7 +55,7 @@
                 }
                 else
                 {
-                    <tr><td><a href="javascript:void(0)" onclick="location.href='/Product/DistributeProduct?productID='+@Model.items[i].ProductID">Raspodjeli !</a></td></tr>
+                    <tr><td><a href="javascript:void(0)" title="Proizvod nije dostupan niti u jednoj poslovnici. Raspodjelite isti sa skladišta !" onclick="location.href='/Product/DistributeProduct?productID='+@Model.items[i].ProductID">Raspodjeli !</a></td></tr>
                 }
 
             }
@@ -71,6 +71,7 @@
     <button type="button" onclick="location.href='/Administration/ShowOrders'">Nazad</button>
 </form>
     
+
 
 <script>
 

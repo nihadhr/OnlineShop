@@ -124,6 +124,7 @@ namespace OnlineShop.Controllers
             }
             order.OrderStatusID = 2;
             order.OrderStatus = _database.orderstatus.Find(2);
+            order.ShipDate = DateTime.Now;
             _database.SaveChanges();
 
             return PartialView("SuccessMessage");

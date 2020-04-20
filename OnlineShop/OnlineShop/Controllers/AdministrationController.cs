@@ -212,6 +212,7 @@ namespace OnlineShop.Controllers
             var user = _database.user.Where(u => u.Id == id).Include(u => u.City).Include(u => u.Gender).FirstOrDefault();
             var model = new EditAdminProfileVM
             {
+                Id=id,
                 Name=user.Name,
                 Surname=user.Surname,
                 BirthDate=user.BirthDate,
@@ -224,5 +225,21 @@ namespace OnlineShop.Controllers
             };
             return View(model);
         }
+
+        [HttpPost]
+        public IActionResult EditAdminProfile(EditAdminProfileVM model)
+        {
+            var user = _database.user.Find(model.Id);
+            user.Name = model.Name;
+            user.Surname = model.Surname;
+            user.BirthDate = model.BirthDate;
+            user.CityID = model.CityID;
+            user.Adress = model.Adress;
+            user.PhoneNumber = model.PhoneNumber;
+            user.GenderID = model.GenderID;
+            _database.SaveChanges();
+            return RedirectToAction("Index", "Administration");
+        }
+
     }
 }

@@ -67,7 +67,7 @@
     }
     else
     {<button type="button" id="btn">Odobri narudžbu za slanje</button>} <br />
-    <button type="button" onclick="CancelOrder()">Poništi narudžbu</button>
+    <button type="button" id="cancel">Poništi narudžbu</button>
     <button type="button" onclick="location.href='/Administration/ShowOrders'">Nazad</button>
 </form>
     
@@ -86,6 +86,13 @@
             }
         });
     });
+    $("#cancel").click(function () {
+        $.get("/Administration/CancelOrder?orderid=@Model.OrderID", function (res) {
+            $("#table").html(res);
+        });
+
+    });
+
 
 </script>
 

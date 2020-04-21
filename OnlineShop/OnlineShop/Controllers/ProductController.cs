@@ -14,9 +14,11 @@ using X.PagedList;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineShop.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProduct _Iproduct;
@@ -272,6 +274,7 @@ namespace OnlineShop.Controllers
             return View(data);
         }
 
+        [AllowAnonymous]
         public IActionResult ShowSubcategories(int id,string search,int? page)          // ID kategorije
         {
 
@@ -294,6 +297,8 @@ namespace OnlineShop.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
+
         public async Task<IActionResult> ShowProducts(int ID,string search)       // ID podkategorije 
         {
             ViewData["data"] = search;
@@ -321,6 +326,7 @@ namespace OnlineShop.Controllers
             return View(await query.ToListAsync());
         }
 
+        [AllowAnonymous]
         public IActionResult ProductDetails(int ID)     // ID proizvoda
         {
             ProductDetailsVM model = _database.product.Where(s=>s.ProductID==ID).Select(a => new ProductDetailsVM

@@ -163,9 +163,31 @@ namespace OnlineShop.Controllers
                 }
 
             }
-            IPagedList<ListOfCustomersVM> lista = model.ToPagedList(page ?? 1, 5);
+            IPagedList<ListOfCustomersVM> lista = model.ToPagedList(page ?? 1, 9);
             return View(lista);
         }
+        public async Task<IActionResult> ListOfAdmins(int? page)
+        {
+            List<ListOfAdminsVM> model = new List<ListOfAdminsVM>();
+            foreach (var user in userManager.Users)
+            {
+                if (await userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    model.Add(new ListOfAdminsVM
+                    {
+                        Id = user.Id,
+                        Email = user.Email,
+                        Firstname = user.Name,
+                        LastName = user.Surname,
+                        PhoneNumber = user.PhoneNumber
+                    });
+                }
+
+            }
+            IPagedList<ListOfAdminsVM> lista = model.ToPagedList(page ?? 1, 6);
+            return View(lista);
+        }
+
         public async Task<IActionResult> SetForAdmin(int id)
         {
             var user = await userManager.FindByIdAsync(id.ToString());

@@ -134,9 +134,10 @@ namespace OnlineShop.Controllers
             var order = _database.order.FirstOrDefault(a=>a.OrderID==orderid);
             order.OrderStatusID = 3;
             order.OrderStatus = _database.orderstatus.Find(3);
-            foreach(var x in _database.orderdetails.Include(p => p.Product).Where(a => a.OrderID == orderid).ToList())
+            var list = _database.orderdetails.Include(p => p.Product).Where(s => s.OrderID == orderid).ToList();
+            foreach(var x in list)
             {
-                x.Product.UnitsInStock += x.Quantity;  //vracamo tu kolicinu u UnitsInStock jer je s tog mjesta prividno oduzeto, dok je narudzba potvrdjena. U slucaju da se narudzba odobri, onda se oduzima i iz poslovnica. U slucaju otkazivanja narudzbe, vraca se kolicina na UnitsInStock
+                _database.product.Find(x.ProductID).UnitsInStock += x.Quantity;  //vracamo tu kolicinu u UnitsInStock jer je s tog mjesta prividno oduzeto, dok je narudzba potvrdjena. U slucaju da se narudzba odobri, onda se oduzima i iz poslovnica. U slucaju otkazivanja narudzbe, vraca se kolicina na UnitsInStock
             }
             _database.SaveChanges();
 

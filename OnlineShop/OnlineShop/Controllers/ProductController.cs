@@ -156,7 +156,7 @@ namespace OnlineShop.Controllers
                 {
                     var st_pr = new StockProduct            // medjutabela
                     {
-                        StockID = 1,                                                                         // jer je samo 1 skladiste
+                        StockID = 1,                                                                        
                         ProductID = neki.ProductID,
                         Quantity = neki.UnitsInStock
                     };
@@ -259,9 +259,6 @@ namespace OnlineShop.Controllers
             return Redirect("/Administration/Index");
         }
 
-
-
-
         public IActionResult Show2()       
         {
            List<ShowCategoriesVM >data = _database.category.Select(c => new ShowCategoriesVM
@@ -270,7 +267,6 @@ namespace OnlineShop.Controllers
                CategoryName = c.CategoryName,
                imageurl=c.ImageUrl
            }).ToList();
-            
             return View(data);
         }
 
@@ -298,7 +294,6 @@ namespace OnlineShop.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-
         public async Task<IActionResult> ShowProducts(int ID,string search)       // ID podkategorije 
         {
             ViewData["data"] = search;
@@ -398,6 +393,7 @@ namespace OnlineShop.Controllers
                     stockQuanttity=_database.stockproduct.Where(a=>a.StockID==e.StockID && product.ProductID==a.ProductID).Select(a=>a.Quantity).FirstOrDefault()
                 }).ToList()
             };
+            ViewData["err"] = TempData["error"];
             return View(model);
         }
 
@@ -409,13 +405,14 @@ namespace OnlineShop.Controllers
             foreach (var i in model._list)
             {
                 var bp = _database.branchproduct.Where(e => e.BranchID == i.branchID && e.ProductID==product.ProductID).FirstOrDefault();
-                if (bp!=null && model.productID == bp.ProductID)
-                {
-                    bp.UnitsInBranch += i.quntityPerBranch;
+                // ide u tabelu jel u toj prodavnici taj proizvod vec postoji
+
+                if (bp!=null && model.productID == bp.ProductID){
+                    bp.UnitsInBranch += i.quntityPerBranch;     // ako je u pitanju isti proizvod doda se kolicina samo
                 }
                 else
                 {
-                   var testing = new BranchProduct
+                   var testing = new BranchProduct  // pravi se novi zapis te poslovnice tog proizvoda te kolicine
                    {
                        BranchID = i.branchID,
                        ProductID = product.ProductID,
@@ -425,10 +422,19 @@ namespace OnlineShop.Controllers
                 }
                 sum+=i.quntityPerBranch;        // sabiraju se kolicine po prodavnicama
             }
-            _database.SaveChanges();
             var stock = _database.stockproduct.Where(e => e.ProductID == model.productID).FirstOrDefault();
+            // ode na skladiste uzme koliko ga ima tamo
 
-            stock.Quantity =stock.Quantity - sum;         
+            if (stock.Quantity >= sum)
+            {
+                stock.Quantity =stock.Quantity - sum;   // od skladista oduzmi UKUPNU KOLICINU ZA SVE POSLOVNICE
+                _database.SaveChanges();
+            }
+            else
+            {
+                TempData["error"] = "Unijeta količina nije dostupna, pokušajte ponovni unos";
+                return Redirect("/Product/DistributeProduct?productID="+product.ProductID);
+            }
             _database.SaveChanges();
             return Redirect("/Product/ShowStock");
         }

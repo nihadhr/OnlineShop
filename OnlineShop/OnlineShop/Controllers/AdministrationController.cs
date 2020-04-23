@@ -66,8 +66,8 @@ namespace OnlineShop.Controllers
             
                //ovdje ide neki VM
                var order = _database.order.Include(i=>i.OrderStatus).FirstOrDefault(s=>s.OrderID==id);
-            var User = _database.user.Find(order.UserID);
-            var model = new EditOrderVM {
+               var User = _database.user.Find(order.UserID);
+               var model = new EditOrderVM {
                 OrderID = id,
                 UserId = order.UserID,
                 OrderStatus=_database.orderstatus.Find(order.OrderStatusID).Status,
@@ -125,8 +125,12 @@ namespace OnlineShop.Controllers
             order.OrderStatusID = 2;
             order.OrderStatus = _database.orderstatus.Find(2);
             order.ShipDate = DateTime.Now;
+            Notification nova = new Notification
+            {
+                UserID = order.UserID,
+                Text = "Vaša narudžba (" + model.OrderID + ") je isporučena."
+            };
             _database.SaveChanges();
-
             return PartialView("SuccessMessage");
         }
         public IActionResult CancelOrder(int orderid)
@@ -139,6 +143,11 @@ namespace OnlineShop.Controllers
             {
                 _database.product.Find(x.ProductID).UnitsInStock += x.Quantity;  //vracamo tu kolicinu u UnitsInStock jer je s tog mjesta prividno oduzeto, dok je narudzba potvrdjena. U slucaju da se narudzba odobri, onda se oduzima i iz poslovnica. U slucaju otkazivanja narudzbe, vraca se kolicina na UnitsInStock
             }
+            Notification nova = new Notification
+            {
+                UserID = order.UserID,
+                Text = "Vaša narudžba (" + orderid + ") je otkazana."
+            };
             _database.SaveChanges();
 
             return PartialView();

@@ -14,7 +14,13 @@
     <h3>Uredi profilne informacije:</h3> <br /> <br />
 
     <form action="/Customer/SaveUserInfo" method="post">
+        Ime: @Html.TextBoxFor(model => model.name) <br />
+        Prezime: @Html.TextBoxFor(model=>model.surname) <br />
+        Adresa: @Html.TextBoxFor(model=>model.adress) <br />
+        Broj telefona: @Html.TextBoxFor(model=>model.phonenumber) <br />
+        
 
+        
 
 
 

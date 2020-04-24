@@ -236,16 +236,14 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        @*@{
+                        @{
                             if (Model.rows.Any())
                             {
                                 <table class=" table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Datum naručivanja</th>
-                                            <th>Datum isporuke</th>
-                                            <th>Ukupan iznos</th>
-                                            <th>Broj naručenih proizvoda</th>
+                                            <th>Datum aktivnosti</th>
+                                            <th>Opis</th>
                                         </tr>
 
                                     </thead>
@@ -253,10 +251,8 @@
                                         @foreach (var r in Model.rows)
                                         {
                                             <tr>
-                                                <td>@r.OrderDate</td>
-                                                <td>@r.ShipDate</td>
-                                                <td>@r.TotalPrice</td>
-                                                <td>@r.NumberOfProducts</td>
+                                                <td>@r.DateOfActivity</td>
+                                                <td>@r.Description</td>
                                             </tr>
                                         }
 
@@ -266,10 +262,10 @@
                             }
                             else
                             {
-                                <label>Ovaj korisnik trenutno nema transakcija za prikaz!</label>
+                                <label>Ovaj administrator trenutno nema aktivnosti za prikaz!</label>
                             }
 
-                        }*@
+                        }
                     </div>
                 </div>
             </div>

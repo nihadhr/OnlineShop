@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace OnlineShop.Controllers
 {
@@ -117,6 +118,13 @@ namespace OnlineShop.Controllers
                 UnitPrice = temp.UnitPrice,
                 UnitsInStock = temp.UnitsInStock
             };
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 1,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity=DateTime.Now
+            });
+            _database.SaveChanges();
             return View(data);
         }
 

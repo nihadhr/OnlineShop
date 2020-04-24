@@ -7,5 +7,6 @@ namespace OnlineShopPodaci
 {
     public interface ICustomer
     {
+        List<Notification> GetNotifications(int userid);
     }
 }

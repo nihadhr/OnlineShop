@@ -10,7 +10,6 @@ namespace OnlineShop.ViewModels
     {
         public string name { get; set; }
         public string surname { get; set; }
-        public DateTime birthdate { get; set; }
         public int choosencity { get; set; }
         public List<SelectListItem> cities { get; set; }
         public string adress { get; set; }

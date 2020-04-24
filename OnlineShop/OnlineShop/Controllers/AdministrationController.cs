@@ -130,6 +130,7 @@ namespace OnlineShop.Controllers
                 UserID = order.UserID,
                 Text = "Vaša narudžba (" + model.OrderID + ") je isporučena."
             };
+            _database.Add(nova);
             _database.SaveChanges();
             return PartialView("SuccessMessage");
         }

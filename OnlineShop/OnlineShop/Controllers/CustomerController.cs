@@ -37,17 +37,33 @@ namespace OnlineShop.Controllers
                 choosencity=user.CityID,
                 cities=_database.city.Select(c=>new SelectListItem {Text=c.CityName,Value=c.CityID.ToString() }).ToList(),
                 adress=user.Adress,
-                birthdate=user.BirthDate
             };
             return View(model);
         }
 
         public IActionResult SaveUserInfo(ChangeUserInfoVM model)
         {
-            return View();
+            int userid = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = _database.Users.Find(userid);
+
+            user.Name = model.name;
+            user.Surname = model.surname;
+            user.Adress = model.adress;
+            user.CityID = model.choosencity;
+            user.PhoneNumber = model.phonenumber;
+
+            _database.SaveChanges();
+            return Redirect("/Customer/Panel");
         }
-        
-        public IActionResult Index()
+        public IActionResult GetNotifications()
+        {
+            int id = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var lista = _customer.GetNotifications(id);
+
+
+            return PartialView();
+        }
+        public IActionResult Panel()
         {
             return View();
         }

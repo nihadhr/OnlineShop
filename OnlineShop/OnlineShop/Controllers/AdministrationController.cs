@@ -272,6 +272,26 @@ namespace OnlineShop.Controllers
             _database.SaveChanges();
             return RedirectToAction("Index", "Administration");
         }
+        public IActionResult AdminDetails(int id)
+        {
+            var u = _database.user.Where(u => u.Id == id).Include(u => u.Gender).Include(u => u.City).FirstOrDefault();
+            AdminDetailsVM model = new AdminDetailsVM
+            {
+                Id = id,
+                Name = u.Name,
+                Surname = u.Surname,
+                BirthDate = u.BirthDate,
+                Adress = u.Adress,
+                PhoneNumber = u.PhoneNumber,
+                //CityName = u.City.CityName,
+                //Gender = u.Gender._Gender,
+                Email = u.Email,
+                
+
+            };
+
+            return View(model);
+        }
 
     }
 }

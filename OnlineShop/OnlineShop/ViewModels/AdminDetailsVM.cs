@@ -17,5 +17,12 @@ namespace OnlineShop.ViewModels
         public string Gender { get; set; }
         public string Email { get; set; }
         public int NumberOfActivities { get; set; }
+        public List<ROW> rows { get; set; }
+
+        public class ROW
+        {
+            public string Description { get; set; }
+            public DateTime DateOfActivity { get; set; }
+        }
     }
 }

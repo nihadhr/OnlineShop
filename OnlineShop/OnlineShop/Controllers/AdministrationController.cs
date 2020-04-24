@@ -287,7 +287,12 @@ namespace OnlineShop.Controllers
                 //CityName = u.City.CityName,
                 //Gender = u.Gender._Gender,
                 Email = u.Email,
-                
+                NumberOfActivities=_database.adminactivity.Where(aa=>aa.AdminID==id).Count(),
+                rows=_database.adminactivity.Where(aa=>aa.AdminID==id).Select(aa=> new AdminDetailsVM.ROW
+                {
+                    Description=aa.Activity.Description,
+                    DateOfActivity=aa.DateOfActivity
+                }).ToList()
 
             };
 

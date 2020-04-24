@@ -16,6 +16,7 @@ namespace OnlineShopPodaci.Model
         [ForeignKey("Activity")]
         public int ActivityID { get; set; }
         public ActivitY Activity { get; set; }
+        public DateTime DateOfActivity { get; set; }
 
     }
 }

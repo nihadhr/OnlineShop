@@ -298,6 +298,18 @@ namespace OnlineShop.Controllers
 
             return View(model);
         }
+        public async Task<IActionResult> RemoveAdmin(int id)
+        {
+            var user = _database.user.Find(id);
+            if(await userManager.IsInRoleAsync(user, "Admin"))
+            {
+                await userManager.RemoveFromRoleAsync(user, "Admin");
+                await userManager.AddToRoleAsync(user, "Customer");
+            }
 
+
+            return RedirectToAction("ListOfAdmins", "Administration");
+
+        }
     }
 }

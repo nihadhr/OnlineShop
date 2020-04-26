@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineShop.ViewModels;
 using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
+
 
 namespace OnlineShop.Controllers
 {
@@ -106,6 +110,27 @@ namespace OnlineShop.Controllers
                 ModelState.AddModelError("", "Neuspješan pokušaj prijave!");
             }
             return View(model);
+        }
+        public IActionResult Contact()
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Ahmed", "ahmed.terzic99@gmail.com"));
+            message.To.Add(new MailboxAddress("Ahmed", "ahmedterzic@hotmail.com"));
+            message.Subject = "OnlineShop Service Notification";
+            message.Body = new TextPart("plain")
+            {
+                Text="Obavijest od Online Shop servisa! Vaša uloga administratora na web aplikaciji je uklonjena kao i pristup svim administratorskim funkcionalnostima!"
+            };
+            using(var client=new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("ahmed.terzic99@gmail.com", "1Kz0481!");
+                client.Send(message);
+                client.Disconnect(true);
+
+            }
+
+            return View();
         }
     }
 

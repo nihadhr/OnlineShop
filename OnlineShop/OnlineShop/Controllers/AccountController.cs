@@ -11,7 +11,8 @@ using OnlineShopPodaci.Model;
 using MailKit.Net.Smtp;
 using MailKit;
 using MimeKit;
-
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace OnlineShop.Controllers
 {
@@ -21,14 +22,16 @@ namespace OnlineShop.Controllers
         private readonly SignInManager<User> signInManager;
         private OnlineShopContext _db;
         private readonly RoleManager<Role> roleManager;
+        private readonly IHostingEnvironment hostingEnvironment;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, OnlineShopContext db, 
-            RoleManager<Role>roleManager)
+            RoleManager<Role>roleManager, IHostingEnvironment hostingEnvironment)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             _db = db;
             this.roleManager = roleManager;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]       
@@ -47,6 +50,14 @@ namespace OnlineShop.Controllers
         {
             if(ModelState.IsValid)
             {
+                string uniqueImageName=null;
+                if (model.Image != null)
+                {
+                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                    uniqueImageName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueImageName);
+                    model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
                 var user = new User
                 {
                     Email = model.Email,
@@ -57,7 +68,8 @@ namespace OnlineShop.Controllers
                     Adress=model.Adress,
                     CityID=model.GradID,
                     PhoneNumber=model.PhoneNumber,
-                    GenderID=model.GenderID
+                    GenderID=model.GenderID,
+                    ImageUrl=uniqueImageName
 
                 };
 
@@ -111,26 +123,26 @@ namespace OnlineShop.Controllers
             }
             return View(model);
         }
-        public IActionResult Contact()
+        public IActionResult Contact(string textForMesage,string mail,string ime,string adresa)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Ahmed", "ahmed.terzic99@gmail.com"));
-            message.To.Add(new MailboxAddress("Ahmed", "ahmedterzic@hotmail.com"));
+            message.From.Add(new MailboxAddress("OnlineShop", "rs1.onlineshop.service@gmail.com"));
+            message.To.Add(new MailboxAddress(ime, mail));
             message.Subject = "OnlineShop Service Notification";
             message.Body = new TextPart("plain")
             {
-                Text="Obavijest od Online Shop servisa! Vaša uloga administratora na web aplikaciji je uklonjena kao i pristup svim administratorskim funkcionalnostima!"
+                Text=textForMesage
             };
             using(var client=new SmtpClient())
             {
                 client.Connect("smtp.gmail.com", 587, false);
-                client.Authenticate("ahmed.terzic99@gmail.com", "1Kz0481!");
+                client.Authenticate("rs1.onlineshop.service@gmail.com", "onlineShop!1");
                 client.Send(message);
                 client.Disconnect(true);
 
             }
 
-            return View();
+            return Redirect(adresa);
         }
     }
 

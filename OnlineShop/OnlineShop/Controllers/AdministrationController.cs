@@ -36,7 +36,31 @@ namespace OnlineShop.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            int id = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var u = _database.user.Find(id);
+            AdminDetailsVM model = new AdminDetailsVM
+            {
+                Id = id,
+                Name = u.Name,
+                Surname = u.Surname,
+                BirthDate = u.BirthDate,
+                Adress = u.Adress,
+                PhoneNumber = u.PhoneNumber,
+                //CityName = u.City.CityName,
+                //Gender = u.Gender._Gender,
+                Email = u.Email,
+                ShowButton = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == id,
+                NumberOfActivities = _database.adminactivity.Where(aa => aa.AdminID == id).Count(),
+                ImageUrl = u.ImageUrl,
+                rows = _database.adminactivity.Where(aa => aa.AdminID == id).Select(aa => new AdminDetailsVM.ROW
+                {
+                    Description = aa.Activity.Description,
+                    DateOfActivity = aa.DateOfActivity
+                }).ToList()
+
+            };
+
+            return View(model);
         }
         public IActionResult ShowOrders()
         {
@@ -169,7 +193,8 @@ namespace OnlineShop.Controllers
                         Email=user.Email,
                         Firstname=user.Name,
                         LastName=user.Surname,
-                        PhoneNumber=user.PhoneNumber
+                        PhoneNumber=user.PhoneNumber,
+                        ImageUrl=user.ImageUrl
                     });
                 }
 
@@ -190,7 +215,8 @@ namespace OnlineShop.Controllers
                         Email = user.Email,
                         Firstname = user.Name,
                         LastName = user.Surname,
-                        PhoneNumber = user.PhoneNumber
+                        PhoneNumber = user.PhoneNumber,
+                        ImageUrl=user.ImageUrl
                     });
                 }
 
@@ -223,6 +249,7 @@ namespace OnlineShop.Controllers
                 //Gender = u.Gender._Gender,
                 Email =u.Email,
                 NumberOfTransactions=_database.order.Where(o=>o.UserID==id).Count(),
+                ImageUrl=u.ImageUrl,
                 rows=_database.order.Where(o=>o.UserID==id).Select(o=>new UserDetailsVM.ROW
                 {
                     TransactionID=o.OrderID,
@@ -287,7 +314,9 @@ namespace OnlineShop.Controllers
                 //CityName = u.City.CityName,
                 //Gender = u.Gender._Gender,
                 Email = u.Email,
-                NumberOfActivities=_database.adminactivity.Where(aa=>aa.AdminID==id).Count(),
+                ShowButton= Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))==id,
+                NumberOfActivities =_database.adminactivity.Where(aa=>aa.AdminID==id).Count(),
+                ImageUrl=u.ImageUrl,
                 rows=_database.adminactivity.Where(aa=>aa.AdminID==id).Select(aa=> new AdminDetailsVM.ROW
                 {
                     Description=aa.Activity.Description,
@@ -306,9 +335,11 @@ namespace OnlineShop.Controllers
                 await userManager.RemoveFromRoleAsync(user, "Admin");
                 await userManager.AddToRoleAsync(user, "Customer");
             }
+            var vrijeme = DateTime.Now.ToString();
+            string text = "Poštovani, obavještavamo vas da je vaša uloga administratora na stranici OnlineShop-a oduzeta. Uloga vam je oduzeta u " 
+                + vrijeme+". OnlineShop Service!";
 
-
-            return RedirectToAction("ListOfAdmins", "Administration");
+            return Redirect("/Account/Contact?textForMesage=" + text+"&mail="+user.Email+"&ime="+user.Name+"&adresa=/Administration/ListOfAdmins");
 
         }
     }

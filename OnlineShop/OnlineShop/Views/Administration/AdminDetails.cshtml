@@ -130,11 +130,20 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src="~/images/admin.jpg" alt="" />
+                    @{
+                        if (Model.ImageUrl != null)
+                        {
+                            <img src="~/images/@Model.ImageUrl" alt="" />
+                        }
+                        else
+                        {
+                            <img src="~/images/admin.jpg" alt="" />
+                        }
+                    }
                     @*<div class="file btn btn-lg btn-primary">
-                            Change Photo
-                            <input type="file" name="file" />
-                        </div>*@
+            Change Photo
+            <input type="file" name="file" />
+        </div>*@
                 </div>
             </div>
             <div class="col-md-6">
@@ -145,7 +154,7 @@
                     <h6>
                         Uloga: Administrator
                     </h6>
-                    <p class="proile-rating">Broj aktivnosti na stranici : <span>...</span></p>
+                    <p class="proile-rating">Broj aktivnosti na stranici : <span>@Model.NumberOfActivities</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Osnovni podaci</a>
@@ -157,7 +166,12 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <a href="/Administration/SetForAdmin?id=@Model.Id" class="btn btn-danger" style="width:100px">Ukloni admina</a>
+                @{
+                    if (Model.ShowButton == false)
+                    {
+                        <a href="/Administration/RemoveAdmin?id=@Model.Id" class="btn btn-danger" style="width:100px">Ukloni admina</a>
+                    }
+                }
             </div>
         </div>
         <div class="row">

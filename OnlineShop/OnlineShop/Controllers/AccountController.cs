@@ -144,6 +144,11 @@ namespace OnlineShop.Controllers
 
             return Redirect(adresa);
         }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 
 }

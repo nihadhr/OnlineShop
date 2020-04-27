@@ -228,8 +228,18 @@ namespace OnlineShop.Controllers
         public async Task<IActionResult> SetForAdmin(int id)
         {
             var user = await userManager.FindByIdAsync(id.ToString());
+           
             await userManager.RemoveFromRoleAsync(user, "Customer");
             await userManager.AddToRoleAsync(user, "Admin");
+
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 6,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            _database.SaveChanges();
+
             return RedirectToAction("ListOfCustomers", "Administration");
 
         }
@@ -297,6 +307,13 @@ namespace OnlineShop.Controllers
             user.Adress = model.Adress;
             user.PhoneNumber = model.PhoneNumber;
             user.GenderID = model.GenderID;
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 4,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            _database.SaveChanges();
             _database.SaveChanges();
             return RedirectToAction("Index", "Administration");
         }
@@ -335,6 +352,13 @@ namespace OnlineShop.Controllers
                 await userManager.RemoveFromRoleAsync(user, "Admin");
                 await userManager.AddToRoleAsync(user, "Customer");
             }
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 5,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            _database.SaveChanges();
             var vrijeme = DateTime.Now.ToString();
             string text = "Poštovani, obavještavamo vas da je vaša uloga administratora na stranici OnlineShop-a oduzeta. Uloga vam je oduzeta u " 
                 + vrijeme+". OnlineShop Service!";

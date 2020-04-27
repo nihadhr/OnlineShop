@@ -10,6 +10,7 @@ using OnlineShopPodaci;
 using OnlineShopPodaci.Model;
 using OnlineShop.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace OnlineShop.Controllers
 {
@@ -55,20 +56,48 @@ namespace OnlineShop.Controllers
             _database.SaveChanges();
             return Redirect("/Customer/Panel");
         }
+        public IActionResult Panel()
+        {   int id = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            TempData["key"] = _database.Users.Include(a => a.City).FirstOrDefault(i => i.Id == id);
+
+            return View();
+        }
+        public IActionResult GetOrders()
+        {
+            int id = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var model = _database.order.Where(s=>s.OrderStatusID==2 && s.UserID==id).Select(o => new GetOrdersVM
+            {
+                orderid=o.OrderID,
+                orderdate=o.OrderDate.ToShortDateString(),
+                shipdate=o.ShipDate.ToShortDateString(),
+                totalprice=o.TotalPrice
+            }).ToList();
+            return PartialView(model);
+        }
+        public IActionResult GetOrderDetails(int orderid)
+        {
+            int id = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var model = _database.orderdetails.Include(a=>a.Product).Where(od => od.OrderID == orderid).Select(s => new GetOrderDetailsVM
+            {
+                productid=s.ProductID,
+                productnumber=s.Product.ProductNumber,
+                productname=s.Product.ProductName,
+                price=s.Product.UnitPrice,
+                quantity=s.Quantity
+            }).ToList();
+
+            return PartialView(model);
+        }
+     
         public IActionResult GetNotifications()
         {
             int id = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var lista = _customer.GetNotifications(id);
-
-
+            TempData["key2"] = lista;
             return PartialView();
         }
-        public IActionResult Panel()
-        {
-            return View();
-        }
 
-        
+
 
     }
 }

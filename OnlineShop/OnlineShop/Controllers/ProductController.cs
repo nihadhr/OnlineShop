@@ -183,6 +183,14 @@ namespace OnlineShop.Controllers
             {
                 productID=ProductID
             };
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 8,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            _database.SaveChanges();
+
             return View(model);
         }
 
@@ -211,6 +219,14 @@ namespace OnlineShop.Controllers
             var model = new AddCategoryVM
             {
             };
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 2,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            _database.SaveChanges();
+
             return View(model);
         }
 
@@ -244,6 +260,14 @@ namespace OnlineShop.Controllers
                     Text=e.CategoryName
                 }).ToList()
             };
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 3,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            _database.SaveChanges();
+
             return View(model);
         }
         public IActionResult SaveSubCategory(AddSubCategoryVM model)
@@ -436,7 +460,15 @@ namespace OnlineShop.Controllers
             if (stock.Quantity >= sum)
             {
                 stock.Quantity =stock.Quantity - sum;   // od skladista oduzmi UKUPNU KOLICINU ZA SVE POSLOVNICE
+                _database.Add(new AdminActivity
+                {
+                    ActivityID = 7,
+                    AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                    DateOfActivity = DateTime.Now
+                });
+
                 _database.SaveChanges();
+
             }
             else
             {

@@ -46,8 +46,8 @@ namespace OnlineShop.Controllers
                 BirthDate = u.BirthDate,
                 Adress = u.Adress,
                 PhoneNumber = u.PhoneNumber,
-                //CityName = u.City.CityName,
-                //Gender = u.Gender._Gender,
+                CityName = _database.city.Find(u.CityID).CityName,
+                Gender = _database.gender.Find(u.GenderID)._Gender,
                 Email = u.Email,
                 ShowButton = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == id,
                 NumberOfActivities = _database.adminactivity.Where(aa => aa.AdminID == id).Count(),
@@ -239,8 +239,18 @@ namespace OnlineShop.Controllers
         public async Task<IActionResult> SetForAdmin(int id)
         {
             var user = await userManager.FindByIdAsync(id.ToString());
+           
             await userManager.RemoveFromRoleAsync(user, "Customer");
             await userManager.AddToRoleAsync(user, "Admin");
+
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 6,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            _database.SaveChanges();
+
             return RedirectToAction("ListOfCustomers", "Administration");
 
         }
@@ -256,8 +266,8 @@ namespace OnlineShop.Controllers
                 BirthDate = u.BirthDate,
                 Adress = u.Adress,
                 PhoneNumber = u.PhoneNumber,
-                //CityName = u.City.CityName,
-                //Gender = u.Gender._Gender,
+                CityName = _database.city.Find(u.CityID).CityName,
+                Gender = _database.gender.Find(u.GenderID)._Gender,
                 Email =u.Email,
                 NumberOfTransactions=_database.order.Where(o=>o.UserID==id).Count(),
                 ImageUrl=u.ImageUrl,
@@ -300,16 +310,26 @@ namespace OnlineShop.Controllers
         [HttpPost]
         public IActionResult EditAdminProfile(EditAdminProfileVM model)
         {
-            var user = _database.user.Find(model.Id);
-            user.Name = model.Name;
-            user.Surname = model.Surname;
-            user.BirthDate = model.BirthDate;
-            user.CityID = model.CityID;
-            user.Adress = model.Adress;
-            user.PhoneNumber = model.PhoneNumber;
-            user.GenderID = model.GenderID;
-            _database.SaveChanges();
-            return RedirectToAction("Index", "Administration");
+            if(ModelState.IsValid)
+            {
+                var user = _database.user.Find(model.Id);
+                user.Name = model.Name;
+                user.Surname = model.Surname;
+                user.BirthDate = model.BirthDate;
+                user.CityID = model.CityID;
+                user.Adress = model.Adress;
+                user.PhoneNumber = model.PhoneNumber;
+                user.GenderID = model.GenderID;
+                _database.Add(new AdminActivity
+                {
+                    ActivityID = 4,
+                    AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                    DateOfActivity = DateTime.Now
+                });
+                _database.SaveChanges();
+                return RedirectToAction("Index", "Administration");
+            }
+            return View(model);
         }
         public IActionResult AdminDetails(int id)
         {
@@ -322,8 +342,8 @@ namespace OnlineShop.Controllers
                 BirthDate = u.BirthDate,
                 Adress = u.Adress,
                 PhoneNumber = u.PhoneNumber,
-                //CityName = u.City.CityName,
-                //Gender = u.Gender._Gender,
+                CityName = _database.city.Find(u.CityID).CityName,
+                Gender = _database.gender.Find(u.GenderID)._Gender,
                 Email = u.Email,
                 ShowButton= Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))==id,
                 NumberOfActivities =_database.adminactivity.Where(aa=>aa.AdminID==id).Count(),
@@ -346,6 +366,13 @@ namespace OnlineShop.Controllers
                 await userManager.RemoveFromRoleAsync(user, "Admin");
                 await userManager.AddToRoleAsync(user, "Customer");
             }
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 5,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            _database.SaveChanges();
             var vrijeme = DateTime.Now.ToString();
             string text = "Poštovani, obavještavamo vas da je vaša uloga administratora na stranici OnlineShop-a oduzeta. Uloga vam je oduzeta u " 
                 + vrijeme+". OnlineShop Service!";

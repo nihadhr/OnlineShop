@@ -125,11 +125,7 @@ namespace OnlineShop.Controllers
 
 
         public IActionResult SaveOrderChanges(EditOrderVM model)
-        {  //ovdje idu provjere modela, ako ne odgovara vrati poruku o greški
-
-            //var a = model.items.First().ProductID;
-            //var b = model.items.First().branches.First().BranchID;
-            //var c = model.items.First().branches.First().Input;
+        {  
             var order = _database.order.Find(model.OrderID);
 
             foreach (var x in model.items)
@@ -154,7 +150,15 @@ namespace OnlineShop.Controllers
                 UserID = order.UserID,
                 Text = "Vaša narudžba (" + model.OrderID + ") je isporučena."
             };
+            
             _database.Add(nova);
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 10,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
+            
             _database.SaveChanges();
             return PartialView("SuccessMessage");
         }
@@ -173,6 +177,13 @@ namespace OnlineShop.Controllers
                 UserID = order.UserID,
                 Text = "Vaša narudžba (" + orderid + ") je otkazana."
             };
+            _database.Add(nova);
+            _database.Add(new AdminActivity
+            {
+                ActivityID = 11,
+                AdminID = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                DateOfActivity = DateTime.Now
+            });
             _database.SaveChanges();
 
             return PartialView();

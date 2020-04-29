@@ -74,7 +74,13 @@ namespace OnlineShop.Controllers
                 _database.Add(item); _database.SaveChanges();
             }
             _cart.RemoveAllCartItems(userid); //obzirom da je sve prešlo u orderdetails, briše se sve iz korpe za tog usera
-
+            Notification nova = new Notification
+            {
+                UserID = userid,
+                Text = "Vaša narudžba (" + id + ") se obrađuje."
+            };
+            _database.Add(nova);
+            _database.SaveChanges();
             return Redirect("OrderMessage");
         }
         public IActionResult OrderMessage()

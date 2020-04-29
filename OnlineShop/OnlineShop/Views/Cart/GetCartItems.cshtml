@@ -11,13 +11,13 @@
 
 @if (Model.Count() == 0)
 {
-    <h5>U košarici nema artikala.</h5>
+    <h5 style="text-align:center;">U košarici nema artikala.</h5>
     <br />
-    <a href="/Home">Kreni sa kupovinom.</a>}
+    <h6 style="text-align:center;"> <a href="/Home">Kreni sa kupovinom.</a> </h6> }
 else
 {
-    <table border="1">
-        <tr>
+    <table style="background-color:white;" class="table table-hover" border="1">
+        <tr style="background-color: #696969; color: #fff">
             <th>Šifra proizvoda</th>
             <th>Naziv proizvoda</th>
             <th>Kategorija</th>

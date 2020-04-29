@@ -25,13 +25,13 @@ else
             <th>Cijena po komadu</th>
             <th>Ukupno</th>
             <th>Akcija</th>
-
+            @if (Model.Any(p => p.ActualQuantity < p.Quantity)) {<th>Napomena</th> }
         </tr>
         @foreach (var x in Model)
         {
             <tr id="row-@x.ProductID">
                 <td>@x.ProductNumber</td>
-                <td>@x.ProductName</td>
+                <td><a style="color:black;" href="javascript:void(0)" onclick="location.href='/Product/ProductDetails?ID=@x.ProductID'">@x.ProductName</a></td>
                 <td>@x.SubCategoryName</td>
                 <td>
                     <input id="@x.ProductID" type="number" min="1" max="@x.ActualQuantity" value="@x.Quantity" />
@@ -77,7 +77,7 @@ else
 
     <button style="margin:5px" id="delete">Očisti korpu</button>
     <br />
-    <a href="/Product/Show2">Nazad na kupnju</a>
+    <a href="/Home">Nazad na kupnju</a>
 
 
 }

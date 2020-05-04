@@ -12,6 +12,8 @@ using OnlineShopPodaci.Model;
 
 namespace OnlineShop.Controllers
 {
+    [Authorize(Roles = "Customer")]
+
     public class CartController : Controller
     {   
         private ICart _cart;

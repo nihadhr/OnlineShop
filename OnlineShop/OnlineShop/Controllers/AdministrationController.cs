@@ -81,7 +81,7 @@ namespace OnlineShop.Controllers
                 UserInfo = s.User.Name + " " + s.User.Surname + " | " + s.User.Adress + " | " + s.User.PhoneNumber,
                 TotalPrice = s.TotalPrice
 
-            }).ToList();
+            }).OrderByDescending(s=>s.OrderDate).ToList();
 
             return PartialView(model);
         }

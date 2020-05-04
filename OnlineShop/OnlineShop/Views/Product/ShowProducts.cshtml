@@ -12,6 +12,10 @@
 
 
 <style>
+    .disabled{
+         opacity: 0.6;
+         cursor: not-allowed;
+    }
     #maindiv {
         width: 24%;
         float: left;
@@ -182,9 +186,12 @@
                                         <button class="btn btn-primary" onclick="AddToCart(@o.productID)">Dodaj u košaricu</button>
 
                                     }
+
+
                                     else
                                     {
-                                        <label class="text-danger">Za dodavanje u košaricu morate biti logirani!</label>
+                                        @*<label class="text-danger">Za dodavanje u košaricu morate biti logirani!</label>*@
+                                        <button title="Za ovu opciju morate biti prijavljeni !" disabled class="btn btn-primary" onclick="AddToCart(@o.productID)">Dodaj u košaricu</button>
                                     }
                                 }
                             </div>
